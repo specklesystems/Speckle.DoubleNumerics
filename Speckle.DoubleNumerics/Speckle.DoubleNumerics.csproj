@@ -7,6 +7,6 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>numerics vector matrix</PackageTags>
     <LicenseUrl>https://opensource.org/licenses/MIT</LicenseUrl>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 </Project>
