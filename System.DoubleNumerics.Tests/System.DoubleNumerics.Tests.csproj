@@ -5,6 +5,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ImplicitUsings>false</ImplicitUsings>
+    <RootNamespace>System.Numerics.Vectors.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.0.0" />
