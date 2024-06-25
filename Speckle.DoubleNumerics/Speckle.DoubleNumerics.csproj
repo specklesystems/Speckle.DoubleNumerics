@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <PackageId>Speckle.DoubleNumerics</PackageId>
+    <PackageVersion>4.0.0</PackageVersion>
+    <Description>Double version of System.Numerics vector libraries</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>numerics vector matrix</PackageTags>
+    <LicenseUrl>https://opensource.org/licenses/MIT</LicenseUrl>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+</Project>
