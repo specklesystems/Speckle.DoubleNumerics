@@ -2,9 +2,6 @@
 <#@ output extension=".cs" #>
 <#@ Assembly Name="System.Core.dll" #>
 <#@ Assembly Name="System.Xml.dll" #>
-<#@ import namespace="System" #>
-<#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Runtime.InteropServices" #>
 <#@ include file="..\src\System\Numerics\GenerationConfig.ttinclude" #><# GenerateCopyrightHeader(); #>
 
 using System;
@@ -13,7 +10,7 @@ using System.Linq;
 using System.Reflection;
 using Xunit;
 
-namespace System.Numerics.Tests
+namespace System.DoubleNumerics.Tests
 {
     /// <summary>
     ///  Vector{T} tests that use random number generation and a unified generic test structure

@@ -2,12 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.DoubleNumerics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using Xunit;
 
-namespace System.Numerics.Tests
+namespace System.DoubleNumerics.Tests
 {
     public class Matrix4x4Tests
     {

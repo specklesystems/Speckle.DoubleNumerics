@@ -4,7 +4,7 @@
 
 using System.Linq;
 
-namespace System.Numerics.Tests
+namespace System.DoubleNumerics.Tests
 {
     public static class Util
     {

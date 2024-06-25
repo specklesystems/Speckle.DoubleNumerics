@@ -8,7 +8,7 @@ using Xunit;
 using System.Numerics;
 using System.Collections.Generic;
 
-namespace System.Numerics.Tests
+namespace System.DoubleNumerics.Tests
 {
     public class Perf_Vector3
     {

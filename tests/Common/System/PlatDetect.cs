@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Xunit;
 
-namespace System.Numerics.Tests.Common.System
+namespace System.DoubleNumerics.Tests.Common.System
 {
     public static class PlatformDetection
     {

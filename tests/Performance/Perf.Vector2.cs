@@ -5,7 +5,6 @@
 //using Microsoft.Xunit.Performance;
 
 using System.Collections.Generic;
-using System.DoubleNumerics;
 
 namespace System.Numerics.Performance.Tests
 {
