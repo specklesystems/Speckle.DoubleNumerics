@@ -41,14 +41,14 @@ Target(RESTORE_TOOLS, () => RunAsync("dotnet", "tool restore"));
 
 Target(FORMAT, DependsOn(RESTORE_TOOLS), () => RunAsync("dotnet", "csharpier --check ."));
 
-Target(RESTORE, () => RunAsync("dotnet", "restore Speckle.Sdk.sln --locked-mode"));
+Target(RESTORE, () => RunAsync("dotnet", "restore Speckle.DoubleNumerics.sln --locked-mode"));
 
-Target(BUILD, DependsOn(RESTORE), () => RunAsync("dotnet", $"build Speckle.Sdk.sln -c Release --no-restore"));
+Target(BUILD, DependsOn(RESTORE), () => RunAsync("dotnet", "build Speckle.DoubleNumerics.sln -c Release --no-restore"));
 
 Target(
   TEST,
   DependsOn(BUILD),
-  Glob.Files(".", "**/*.Tests.Unit.csproj"),
+  Glob.Files(".", "**/*.Tests.csproj"),
   async file =>
   {
     await RunAsync("dotnet", $"test {file} -c Release --no-build --verbosity=normal");
