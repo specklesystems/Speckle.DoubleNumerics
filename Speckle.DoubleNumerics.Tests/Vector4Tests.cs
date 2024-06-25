@@ -1030,9 +1030,9 @@ public class Vector4Tests
 
     Assert.True(
       MathHelper.Equal(target.X, x)
-      && MathHelper.Equal(target.Y, y)
-      && MathHelper.Equal(target.Z, z)
-      && MathHelper.Equal(target.W, w),
+        && MathHelper.Equal(target.Y, y)
+        && MathHelper.Equal(target.Z, z)
+        && MathHelper.Equal(target.W, w),
       "Vector4 constructor(x,y,z,w) did not return the expected value."
     );
   }
@@ -1048,9 +1048,9 @@ public class Vector4Tests
     Vector4 target = new Vector4(a, z, w);
     Assert.True(
       MathHelper.Equal(target.X, a.X)
-      && MathHelper.Equal(target.Y, a.Y)
-      && MathHelper.Equal(target.Z, z)
-      && MathHelper.Equal(target.W, w),
+        && MathHelper.Equal(target.Y, a.Y)
+        && MathHelper.Equal(target.Z, z)
+        && MathHelper.Equal(target.W, w),
       "Vector4 constructor(Vector2,z,w) did not return the expected value."
     );
   }
@@ -1066,9 +1066,9 @@ public class Vector4Tests
 
     Assert.True(
       MathHelper.Equal(target.X, a.X)
-      && MathHelper.Equal(target.Y, a.Y)
-      && MathHelper.Equal(target.Z, a.Z)
-      && MathHelper.Equal(target.W, w),
+        && MathHelper.Equal(target.Y, a.Y)
+        && MathHelper.Equal(target.Z, a.Z)
+        && MathHelper.Equal(target.W, w),
       "Vector4 constructor(Vector3,w) did not return the expected value."
     );
   }

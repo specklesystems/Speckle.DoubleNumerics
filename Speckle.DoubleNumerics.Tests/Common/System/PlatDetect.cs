@@ -169,13 +169,7 @@ public static class PlatformDetection
   }
 
   [DllImport("libc", SetLastError = true)]
-  private static extern int sysctlbyname(
-    string ctlName,
-    byte[] oldp,
-    ref IntPtr oldpLen,
-    byte[]? newp,
-    IntPtr newpLen
-  );
+  private static extern int sysctlbyname(string ctlName, byte[] oldp, ref IntPtr oldpLen, byte[]? newp, IntPtr newpLen);
 
   [DllImport("ntdll.dll")]
   private static extern int RtlGetVersion(out RTL_OSVERSIONINFOEX lpVersionInformation);

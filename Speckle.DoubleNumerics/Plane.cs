@@ -31,9 +31,9 @@ public struct Plane : IEquatable<Plane>
   /// <param name="d">The distance of the Plane along its normal from the origin.</param>
   public Plane(double x, double y, double z, double d)
   {
-      Normal = new Vector3(x, y, z);
-      D = d;
-    }
+    Normal = new Vector3(x, y, z);
+    D = d;
+  }
 
   /// <summary>
   /// Constructs a Plane from the given normal and distance along the normal from the origin.
@@ -42,9 +42,9 @@ public struct Plane : IEquatable<Plane>
   /// <param name="d">The Plane's distance from the origin along its normal vector.</param>
   public Plane(Vector3 normal, double d)
   {
-      Normal = normal;
-      D = d;
-    }
+    Normal = normal;
+    D = d;
+  }
 
   /// <summary>
   /// Constructs a Plane from the given Vector4.
@@ -53,9 +53,9 @@ public struct Plane : IEquatable<Plane>
   /// and whose W component defines the distance along that normal from the origin.</param>
   public Plane(Vector4 value)
   {
-      Normal = new Vector3(value.X, value.Y, value.Z);
-      D = value.W;
-    }
+    Normal = new Vector3(value.X, value.Y, value.Z);
+    D = value.W;
+  }
 
   /// <summary>
   /// Creates a Plane that contains the three given points.
@@ -67,27 +67,27 @@ public struct Plane : IEquatable<Plane>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Plane CreateFromVertices(Vector3 point1, Vector3 point2, Vector3 point3)
   {
-      double ax = point2.X - point1.X;
-      double ay = point2.Y - point1.Y;
-      double az = point2.Z - point1.Z;
+    double ax = point2.X - point1.X;
+    double ay = point2.Y - point1.Y;
+    double az = point2.Z - point1.Z;
 
-      double bx = point3.X - point1.X;
-      double by = point3.Y - point1.Y;
-      double bz = point3.Z - point1.Z;
+    double bx = point3.X - point1.X;
+    double by = point3.Y - point1.Y;
+    double bz = point3.Z - point1.Z;
 
-      // N=Cross(a,b)
-      double nx = ay * bz - az * by;
-      double ny = az * bx - ax * bz;
-      double nz = ax * by - ay * bx;
+    // N=Cross(a,b)
+    double nx = ay * bz - az * by;
+    double ny = az * bx - ax * bz;
+    double nz = ax * by - ay * bx;
 
-      // Normalize(N)
-      double ls = nx * nx + ny * ny + nz * nz;
-      double invNorm = 1.0 / Math.Sqrt(ls);
+    // Normalize(N)
+    double ls = nx * nx + ny * ny + nz * nz;
+    double invNorm = 1.0 / Math.Sqrt(ls);
 
-      Vector3 normal = new(nx * invNorm, ny * invNorm, nz * invNorm);
+    Vector3 normal = new(nx * invNorm, ny * invNorm, nz * invNorm);
 
-      return new Plane(normal, -(normal.X * point1.X + normal.Y * point1.Y + normal.Z * point1.Z));
-    }
+    return new Plane(normal, -(normal.X * point1.X + normal.Y * point1.Y + normal.Z * point1.Z));
+  }
 
   /// <summary>
   /// Creates a new Plane whose normal vector is the source Plane's normal vector normalized.
@@ -97,18 +97,18 @@ public struct Plane : IEquatable<Plane>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Plane Normalize(Plane value)
   {
-      const double FLT_EPSILON = 1.192092896e-07; // smallest such that 1.0+FLT_EPSILON != 1.0
-      double f = value.Normal.X * value.Normal.X + value.Normal.Y * value.Normal.Y + value.Normal.Z * value.Normal.Z;
+    const double FLT_EPSILON = 1.192092896e-07; // smallest such that 1.0+FLT_EPSILON != 1.0
+    double f = value.Normal.X * value.Normal.X + value.Normal.Y * value.Normal.Y + value.Normal.Z * value.Normal.Z;
 
-      if (Math.Abs(f - 1.0) < FLT_EPSILON)
-      {
-        return value; // It already normalized, so we don't need to further process.
-      }
-
-      double fInv = 1.0 / Math.Sqrt(f);
-
-      return new Plane(value.Normal.X * fInv, value.Normal.Y * fInv, value.Normal.Z * fInv, value.D * fInv);
+    if (Math.Abs(f - 1.0) < FLT_EPSILON)
+    {
+      return value; // It already normalized, so we don't need to further process.
     }
+
+    double fInv = 1.0 / Math.Sqrt(f);
+
+    return new Plane(value.Normal.X * fInv, value.Normal.Y * fInv, value.Normal.Z * fInv, value.D * fInv);
+  }
 
   /// <summary>
   /// Transforms a normalized Plane by a Matrix.
@@ -120,21 +120,21 @@ public struct Plane : IEquatable<Plane>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Plane Transform(Plane plane, Matrix4x4 matrix)
   {
-      Matrix4x4 m;
-      Matrix4x4.Invert(matrix, out m);
+    Matrix4x4 m;
+    Matrix4x4.Invert(matrix, out m);
 
-      double x = plane.Normal.X,
-        y = plane.Normal.Y,
-        z = plane.Normal.Z,
-        w = plane.D;
+    double x = plane.Normal.X,
+      y = plane.Normal.Y,
+      z = plane.Normal.Z,
+      w = plane.D;
 
-      return new Plane(
-        x * m.M11 + y * m.M12 + z * m.M13 + w * m.M14,
-        x * m.M21 + y * m.M22 + z * m.M23 + w * m.M24,
-        x * m.M31 + y * m.M32 + z * m.M33 + w * m.M34,
-        x * m.M41 + y * m.M42 + z * m.M43 + w * m.M44
-      );
-    }
+    return new Plane(
+      x * m.M11 + y * m.M12 + z * m.M13 + w * m.M14,
+      x * m.M21 + y * m.M22 + z * m.M23 + w * m.M24,
+      x * m.M31 + y * m.M32 + z * m.M33 + w * m.M34,
+      x * m.M41 + y * m.M42 + z * m.M43 + w * m.M44
+    );
+  }
 
   /// <summary>
   ///  Transforms a normalized Plane by a Quaternion rotation.
@@ -146,39 +146,39 @@ public struct Plane : IEquatable<Plane>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Plane Transform(Plane plane, Quaternion rotation)
   {
-      // Compute rotation matrix.
-      double x2 = rotation.X + rotation.X;
-      double y2 = rotation.Y + rotation.Y;
-      double z2 = rotation.Z + rotation.Z;
+    // Compute rotation matrix.
+    double x2 = rotation.X + rotation.X;
+    double y2 = rotation.Y + rotation.Y;
+    double z2 = rotation.Z + rotation.Z;
 
-      double wx2 = rotation.W * x2;
-      double wy2 = rotation.W * y2;
-      double wz2 = rotation.W * z2;
-      double xx2 = rotation.X * x2;
-      double xy2 = rotation.X * y2;
-      double xz2 = rotation.X * z2;
-      double yy2 = rotation.Y * y2;
-      double yz2 = rotation.Y * z2;
-      double zz2 = rotation.Z * z2;
+    double wx2 = rotation.W * x2;
+    double wy2 = rotation.W * y2;
+    double wz2 = rotation.W * z2;
+    double xx2 = rotation.X * x2;
+    double xy2 = rotation.X * y2;
+    double xz2 = rotation.X * z2;
+    double yy2 = rotation.Y * y2;
+    double yz2 = rotation.Y * z2;
+    double zz2 = rotation.Z * z2;
 
-      double m11 = 1.0 - yy2 - zz2;
-      double m21 = xy2 - wz2;
-      double m31 = xz2 + wy2;
+    double m11 = 1.0 - yy2 - zz2;
+    double m21 = xy2 - wz2;
+    double m31 = xz2 + wy2;
 
-      double m12 = xy2 + wz2;
-      double m22 = 1.0 - xx2 - zz2;
-      double m32 = yz2 - wx2;
+    double m12 = xy2 + wz2;
+    double m22 = 1.0 - xx2 - zz2;
+    double m32 = yz2 - wx2;
 
-      double m13 = xz2 - wy2;
-      double m23 = yz2 + wx2;
-      double m33 = 1.0 - xx2 - yy2;
+    double m13 = xz2 - wy2;
+    double m23 = yz2 + wx2;
+    double m33 = 1.0 - xx2 - yy2;
 
-      double x = plane.Normal.X,
-        y = plane.Normal.Y,
-        z = plane.Normal.Z;
+    double x = plane.Normal.X,
+      y = plane.Normal.Y,
+      z = plane.Normal.Z;
 
-      return new Plane(x * m11 + y * m21 + z * m31, x * m12 + y * m22 + z * m32, x * m13 + y * m23 + z * m33, plane.D);
-    }
+    return new Plane(x * m11 + y * m21 + z * m31, x * m12 + y * m22 + z * m32, x * m13 + y * m23 + z * m33, plane.D);
+  }
 
   /// <summary>
   /// Calculates the dot product of a Plane and Vector4.
@@ -187,7 +187,8 @@ public struct Plane : IEquatable<Plane>
   /// <param name="value">The Vector4.</param>
   /// <returns>The dot product.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static double Dot(Plane plane, Vector4 value) => plane.Normal.X * value.X + plane.Normal.Y * value.Y + plane.Normal.Z * value.Z + plane.D * value.W;
+  public static double Dot(Plane plane, Vector4 value) =>
+    plane.Normal.X * value.X + plane.Normal.Y * value.Y + plane.Normal.Z * value.Z + plane.D * value.W;
 
   /// <summary>
   /// Returns the dot product of a specified Vector3 and the normal vector of this Plane plus the distance (D) value of the Plane.
@@ -196,7 +197,8 @@ public struct Plane : IEquatable<Plane>
   /// <param name="value">The Vector3.</param>
   /// <returns>The resulting value.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static double DotCoordinate(Plane plane, Vector3 value) => plane.Normal.X * value.X + plane.Normal.Y * value.Y + plane.Normal.Z * value.Z + plane.D;
+  public static double DotCoordinate(Plane plane, Vector3 value) =>
+    plane.Normal.X * value.X + plane.Normal.Y * value.Y + plane.Normal.Z * value.Z + plane.D;
 
   /// <summary>
   /// Returns the dot product of a specified Vector3 and the Normal vector of this Plane.
@@ -205,7 +207,8 @@ public struct Plane : IEquatable<Plane>
   /// <param name="value">The Vector3.</param>
   /// <returns>The resulting dot product.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static double DotNormal(Plane plane, Vector3 value) => plane.Normal.X * value.X + plane.Normal.Y * value.Y + plane.Normal.Z * value.Z;
+  public static double DotNormal(Plane plane, Vector3 value) =>
+    plane.Normal.X * value.X + plane.Normal.Y * value.Y + plane.Normal.Z * value.Z;
 
   /// <summary>
   /// Returns a boolean indicating whether the two given Planes are equal.
@@ -215,12 +218,12 @@ public struct Plane : IEquatable<Plane>
   /// <returns>True if the Planes are equal; False otherwise.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static bool operator ==(Plane value1, Plane value2) =>
-  (
-    value1.Normal.X == value2.Normal.X
-    && value1.Normal.Y == value2.Normal.Y
-    && value1.Normal.Z == value2.Normal.Z
-    && value1.D == value2.D
-  );
+    (
+      value1.Normal.X == value2.Normal.X
+      && value1.Normal.Y == value2.Normal.Y
+      && value1.Normal.Z == value2.Normal.Z
+      && value1.D == value2.D
+    );
 
   /// <summary>
   /// Returns a boolean indicating whether the two given Planes are not equal.
@@ -230,12 +233,12 @@ public struct Plane : IEquatable<Plane>
   /// <returns>True if the Planes are not equal; False if they are equal.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static bool operator !=(Plane value1, Plane value2) =>
-  (
-    value1.Normal.X != value2.Normal.X
-    || value1.Normal.Y != value2.Normal.Y
-    || value1.Normal.Z != value2.Normal.Z
-    || value1.D != value2.D
-  );
+    (
+      value1.Normal.X != value2.Normal.X
+      || value1.Normal.Y != value2.Normal.Y
+      || value1.Normal.Z != value2.Normal.Z
+      || value1.D != value2.D
+    );
 
   /// <summary>
   /// Returns a boolean indicating whether the given Plane is equal to this Plane instance.
@@ -243,7 +246,8 @@ public struct Plane : IEquatable<Plane>
   /// <param name="other">The Plane to compare this instance to.</param>
   /// <returns>True if the other Plane is equal to this instance; False otherwise.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public bool Equals(Plane other) => (Normal.X == other.Normal.X && Normal.Y == other.Normal.Y && Normal.Z == other.Normal.Z && D == other.D);
+  public bool Equals(Plane other) =>
+    (Normal.X == other.Normal.X && Normal.Y == other.Normal.Y && Normal.Z == other.Normal.Z && D == other.D);
 
   /// <summary>
   /// Returns a boolean indicating whether the given Object is equal to this Plane instance.
@@ -253,13 +257,13 @@ public struct Plane : IEquatable<Plane>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public override bool Equals(object? obj)
   {
-      if (obj is Plane plane)
-      {
-        return Equals(plane);
-      }
-
-      return false;
+    if (obj is Plane plane)
+    {
+      return Equals(plane);
     }
+
+    return false;
+  }
 
   /// <summary>
   /// Returns a String representing this Plane instance.
@@ -267,10 +271,10 @@ public struct Plane : IEquatable<Plane>
   /// <returns>The string representation.</returns>
   public override string ToString()
   {
-      CultureInfo ci = CultureInfo.CurrentCulture;
+    CultureInfo ci = CultureInfo.CurrentCulture;
 
-      return String.Format(ci, "{{Normal:{0} D:{1}}}", Normal.ToString(), D.ToString(ci));
-    }
+    return String.Format(ci, "{{Normal:{0} D:{1}}}", Normal.ToString(), D.ToString(ci));
+  }
 
   /// <summary>
   /// Returns the hash code for this instance.

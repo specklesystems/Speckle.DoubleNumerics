@@ -22,7 +22,8 @@ static class MathHelper
 
   public static bool Equal(Vector3 a, Vector3 b) => Equal(a.X, b.X) && Equal(a.Y, b.Y) && Equal(a.Z, b.Z);
 
-  public static bool Equal(Vector4 a, Vector4 b) => Equal(a.X, b.X) && Equal(a.Y, b.Y) && Equal(a.Z, b.Z) && Equal(a.W, b.W);
+  public static bool Equal(Vector4 a, Vector4 b) =>
+    Equal(a.X, b.X) && Equal(a.Y, b.Y) && Equal(a.Z, b.Z) && Equal(a.W, b.W);
 
   public static bool Equal(Matrix4x4 a, Matrix4x4 b) =>
     Equal(a.M11, b.M11)
@@ -52,7 +53,8 @@ static class MathHelper
 
   public static bool Equal(Plane a, Plane b) => Equal(a.Normal, b.Normal) && Equal(a.D, b.D);
 
-  public static bool Equal(Quaternion a, Quaternion b) => Equal(a.X, b.X) && Equal(a.Y, b.Y) && Equal(a.Z, b.Z) && Equal(a.W, b.W);
+  public static bool Equal(Quaternion a, Quaternion b) =>
+    Equal(a.X, b.X) && Equal(a.Y, b.Y) && Equal(a.Z, b.Z) && Equal(a.W, b.W);
 
   public static bool EqualRotation(Quaternion a, Quaternion b) => Equal(a, b) || Equal(a, -b);
 }

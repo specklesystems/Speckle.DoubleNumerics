@@ -274,9 +274,9 @@ public class QuaternionTests
 
     Assert.True(
       MathHelper.Equal(target.X, x)
-      && MathHelper.Equal(target.Y, y)
-      && MathHelper.Equal(target.Z, z)
-      && MathHelper.Equal(target.W, w),
+        && MathHelper.Equal(target.Y, y)
+        && MathHelper.Equal(target.Z, z)
+        && MathHelper.Equal(target.W, w),
       "Quaternion.constructor (x,y,z,w) did not return the expected value."
     );
   }
@@ -291,9 +291,9 @@ public class QuaternionTests
     Quaternion target = new Quaternion(v, w);
     Assert.True(
       MathHelper.Equal(target.X, v.X)
-      && MathHelper.Equal(target.Y, v.Y)
-      && MathHelper.Equal(target.Z, v.Z)
-      && MathHelper.Equal(target.W, w),
+        && MathHelper.Equal(target.Y, v.Y)
+        && MathHelper.Equal(target.Z, v.Z)
+        && MathHelper.Equal(target.W, w),
       "Quaternion.constructor (Vector3,w) did not return the expected value."
     );
   }
@@ -739,10 +739,7 @@ public class QuaternionTests
 
     // make sure convert back to matrix is same as we passed matrix.
     Matrix4x4 m2 = Matrix4x4.CreateFromQuaternion(actual);
-    Assert.True(
-      MathHelper.Equal(matrix, m2),
-      "Quaternion.CreateFromRotationMatrix did not return the expected value."
-    );
+    Assert.True(MathHelper.Equal(matrix, m2), "Quaternion.CreateFromRotationMatrix did not return the expected value.");
   }
 
   // A test for CreateFromRotationMatrix (Matrix4x4)
@@ -898,10 +895,7 @@ public class QuaternionTests
 
     // make sure convert back to matrix is same as we passed matrix.
     Matrix4x4 m2 = Matrix4x4.CreateFromQuaternion(actual);
-    Assert.True(
-      MathHelper.Equal(matrix, m2),
-      "Quaternion.CreateFromRotationMatrix did not return the expected value."
-    );
+    Assert.True(MathHelper.Equal(matrix, m2), "Quaternion.CreateFromRotationMatrix did not return the expected value.");
   }
 
   // A test for CreateFromRotationMatrix (Matrix4x4)
@@ -922,10 +916,7 @@ public class QuaternionTests
 
     // make sure convert back to matrix is same as we passed matrix.
     Matrix4x4 m2 = Matrix4x4.CreateFromQuaternion(actual);
-    Assert.True(
-      MathHelper.Equal(matrix, m2),
-      "Quaternion.CreateFromRotationMatrix did not return the expected value."
-    );
+    Assert.True(MathHelper.Equal(matrix, m2), "Quaternion.CreateFromRotationMatrix did not return the expected value.");
   }
 
   // A test for CreateFromRotationMatrix (Matrix4x4)
@@ -946,10 +937,7 @@ public class QuaternionTests
 
     // make sure convert back to matrix is same as we passed matrix.
     Matrix4x4 m2 = Matrix4x4.CreateFromQuaternion(actual);
-    Assert.True(
-      MathHelper.Equal(matrix, m2),
-      "Quaternion.CreateFromRotationMatrix did not return the expected value."
-    );
+    Assert.True(MathHelper.Equal(matrix, m2), "Quaternion.CreateFromRotationMatrix did not return the expected value.");
   }
 
   // A test for Equals (Quaternion)

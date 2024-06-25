@@ -71,9 +71,9 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
     get => new(M31, M32);
     set
     {
-        M31 = value.X;
-        M32 = value.Y;
-      }
+      M31 = value.X;
+      M32 = value.Y;
+    }
   }
 
   /// <summary>
@@ -81,13 +81,13 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// </summary>
   public Matrix3x2(double m11, double m12, double m21, double m22, double m31, double m32)
   {
-      M11 = m11;
-      M12 = m12;
-      M21 = m21;
-      M22 = m22;
-      M31 = m31;
-      M32 = m32;
-    }
+    M11 = m11;
+    M12 = m12;
+    M21 = m21;
+    M22 = m22;
+    M31 = m31;
+    M32 = m32;
+  }
 
   /// <summary>
   /// Creates a translation matrix from the given vector.
@@ -96,18 +96,18 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>A translation matrix.</returns>
   public static Matrix3x2 CreateTranslation(Vector2 position)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      result.M11 = 1.0;
-      result.M12 = 0.0;
-      result.M21 = 0.0;
-      result.M22 = 1.0;
+    result.M11 = 1.0;
+    result.M12 = 0.0;
+    result.M21 = 0.0;
+    result.M22 = 1.0;
 
-      result.M31 = position.X;
-      result.M32 = position.Y;
+    result.M31 = position.X;
+    result.M32 = position.Y;
 
-      return result;
-    }
+    return result;
+  }
 
   /// <summary>
   /// Creates a translation matrix from the given X and Y components.
@@ -117,29 +117,29 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>A translation matrix.</returns>
   public static Matrix3x2 CreateTranslation(double xPosition, double yPosition)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      result.M11 = 1.0;
-      result.M12 = 0.0;
-      result.M21 = 0.0;
-      result.M22 = 1.0;
+    result.M11 = 1.0;
+    result.M12 = 0.0;
+    result.M21 = 0.0;
+    result.M22 = 1.0;
 
-      result.M31 = xPosition;
-      result.M32 = yPosition;
+    result.M31 = xPosition;
+    result.M32 = yPosition;
 
-      return result;
-    }
+    return result;
+  }
 
   public string ToMultiLineString()
   {
-      var ci = CultureInfo.CurrentCulture;
+    var ci = CultureInfo.CurrentCulture;
 
-      var sb = new StringBuilder();
-      sb.AppendLine($"{M11.ToString(ci), -19} {M12.ToString(ci), -19}");
-      sb.AppendLine($"{M21.ToString(ci), -19} {M22.ToString(ci), -19}");
-      sb.AppendLine($"{M31.ToString(ci), -19} {M32.ToString(ci), -19}");
-      return sb.ToString();
-    }
+    var sb = new StringBuilder();
+    sb.AppendLine($"{M11.ToString(ci), -19} {M12.ToString(ci), -19}");
+    sb.AppendLine($"{M21.ToString(ci), -19} {M22.ToString(ci), -19}");
+    sb.AppendLine($"{M31.ToString(ci), -19} {M32.ToString(ci), -19}");
+    return sb.ToString();
+  }
 
   /// <summary>
   /// Creates a scale matrix from the given X and Y components.
@@ -149,17 +149,17 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>A scaling matrix.</returns>
   public static Matrix3x2 CreateScale(double xScale, double yScale)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      result.M11 = xScale;
-      result.M12 = 0.0;
-      result.M21 = 0.0;
-      result.M22 = yScale;
-      result.M31 = 0.0;
-      result.M32 = 0.0;
+    result.M11 = xScale;
+    result.M12 = 0.0;
+    result.M21 = 0.0;
+    result.M22 = yScale;
+    result.M31 = 0.0;
+    result.M32 = 0.0;
 
-      return result;
-    }
+    return result;
+  }
 
   /// <summary>
   /// Creates a scale matrix that is offset by a given center point.
@@ -170,20 +170,20 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>A scaling matrix.</returns>
   public static Matrix3x2 CreateScale(double xScale, double yScale, Vector2 centerPoint)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      double tx = centerPoint.X * (1 - xScale);
-      double ty = centerPoint.Y * (1 - yScale);
+    double tx = centerPoint.X * (1 - xScale);
+    double ty = centerPoint.Y * (1 - yScale);
 
-      result.M11 = xScale;
-      result.M12 = 0.0;
-      result.M21 = 0.0;
-      result.M22 = yScale;
-      result.M31 = tx;
-      result.M32 = ty;
+    result.M11 = xScale;
+    result.M12 = 0.0;
+    result.M21 = 0.0;
+    result.M22 = yScale;
+    result.M31 = tx;
+    result.M32 = ty;
 
-      return result;
-    }
+    return result;
+  }
 
   /// <summary>
   /// Creates a scale matrix from the given vector scale.
@@ -192,17 +192,17 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>A scaling matrix.</returns>
   public static Matrix3x2 CreateScale(Vector2 scales)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      result.M11 = scales.X;
-      result.M12 = 0.0;
-      result.M21 = 0.0;
-      result.M22 = scales.Y;
-      result.M31 = 0.0;
-      result.M32 = 0.0;
+    result.M11 = scales.X;
+    result.M12 = 0.0;
+    result.M21 = 0.0;
+    result.M22 = scales.Y;
+    result.M31 = 0.0;
+    result.M32 = 0.0;
 
-      return result;
-    }
+    return result;
+  }
 
   /// <summary>
   /// Creates a scale matrix from the given vector scale with an offset from the given center point.
@@ -212,20 +212,20 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>A scaling matrix.</returns>
   public static Matrix3x2 CreateScale(Vector2 scales, Vector2 centerPoint)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      double tx = centerPoint.X * (1 - scales.X);
-      double ty = centerPoint.Y * (1 - scales.Y);
+    double tx = centerPoint.X * (1 - scales.X);
+    double ty = centerPoint.Y * (1 - scales.Y);
 
-      result.M11 = scales.X;
-      result.M12 = 0.0;
-      result.M21 = 0.0;
-      result.M22 = scales.Y;
-      result.M31 = tx;
-      result.M32 = ty;
+    result.M11 = scales.X;
+    result.M12 = 0.0;
+    result.M21 = 0.0;
+    result.M22 = scales.Y;
+    result.M31 = tx;
+    result.M32 = ty;
 
-      return result;
-    }
+    return result;
+  }
 
   /// <summary>
   /// Creates a scale matrix that scales uniformly with the given scale.
@@ -234,17 +234,17 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>A scaling matrix.</returns>
   public static Matrix3x2 CreateScale(double scale)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      result.M11 = scale;
-      result.M12 = 0.0;
-      result.M21 = 0.0;
-      result.M22 = scale;
-      result.M31 = 0.0;
-      result.M32 = 0.0;
+    result.M11 = scale;
+    result.M12 = 0.0;
+    result.M21 = 0.0;
+    result.M22 = scale;
+    result.M31 = 0.0;
+    result.M32 = 0.0;
 
-      return result;
-    }
+    return result;
+  }
 
   /// <summary>
   /// Creates a scale matrix that scales uniformly with the given scale with an offset from the given center.
@@ -254,20 +254,20 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>A scaling matrix.</returns>
   public static Matrix3x2 CreateScale(double scale, Vector2 centerPoint)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      double tx = centerPoint.X * (1 - scale);
-      double ty = centerPoint.Y * (1 - scale);
+    double tx = centerPoint.X * (1 - scale);
+    double ty = centerPoint.Y * (1 - scale);
 
-      result.M11 = scale;
-      result.M12 = 0.0;
-      result.M21 = 0.0;
-      result.M22 = scale;
-      result.M31 = tx;
-      result.M32 = ty;
+    result.M11 = scale;
+    result.M12 = 0.0;
+    result.M21 = 0.0;
+    result.M22 = scale;
+    result.M31 = tx;
+    result.M32 = ty;
 
-      return result;
-    }
+    return result;
+  }
 
   /// <summary>
   /// Creates a skew matrix from the given angles in radians.
@@ -277,20 +277,20 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>A skew matrix.</returns>
   public static Matrix3x2 CreateSkew(double radiansX, double radiansY)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      double xTan = Math.Tan(radiansX);
-      double yTan = Math.Tan(radiansY);
+    double xTan = Math.Tan(radiansX);
+    double yTan = Math.Tan(radiansY);
 
-      result.M11 = 1.0;
-      result.M12 = yTan;
-      result.M21 = xTan;
-      result.M22 = 1.0;
-      result.M31 = 0.0;
-      result.M32 = 0.0;
+    result.M11 = 1.0;
+    result.M12 = yTan;
+    result.M21 = xTan;
+    result.M22 = 1.0;
+    result.M31 = 0.0;
+    result.M32 = 0.0;
 
-      return result;
-    }
+    return result;
+  }
 
   /// <summary>
   /// Creates a skew matrix from the given angles in radians and a center point.
@@ -301,23 +301,23 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>A skew matrix.</returns>
   public static Matrix3x2 CreateSkew(double radiansX, double radiansY, Vector2 centerPoint)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      double xTan = Math.Tan(radiansX);
-      double yTan = Math.Tan(radiansY);
+    double xTan = Math.Tan(radiansX);
+    double yTan = Math.Tan(radiansY);
 
-      double tx = -centerPoint.Y * xTan;
-      double ty = -centerPoint.X * yTan;
+    double tx = -centerPoint.Y * xTan;
+    double ty = -centerPoint.X * yTan;
 
-      result.M11 = 1.0;
-      result.M12 = yTan;
-      result.M21 = xTan;
-      result.M22 = 1.0;
-      result.M31 = tx;
-      result.M32 = ty;
+    result.M11 = 1.0;
+    result.M12 = yTan;
+    result.M21 = xTan;
+    result.M22 = 1.0;
+    result.M31 = tx;
+    result.M32 = ty;
 
-      return result;
-    }
+    return result;
+  }
 
   /// <summary>
   /// Creates a rotation matrix using the given rotation in radians.
@@ -326,58 +326,58 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>A rotation matrix.</returns>
   public static Matrix3x2 CreateRotation(double radians)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      radians = Math.IEEERemainder(radians, Math.PI * 2);
+    radians = Math.IEEERemainder(radians, Math.PI * 2);
 
-      double c,
-        s;
+    double c,
+      s;
 
-      const double epsilon = 0.001 * Math.PI / 180; // 0.1% of a degree
+    const double epsilon = 0.001 * Math.PI / 180; // 0.1% of a degree
 
-      if (radians > -epsilon && radians < epsilon)
-      {
-        // Exact case for zero rotation.
-        c = 1;
-        s = 0;
-      }
-      else if (radians > Math.PI / 2 - epsilon && radians < Math.PI / 2 + epsilon)
-      {
-        // Exact case for 90 degree rotation.
-        c = 0;
-        s = 1;
-      }
-      else if (radians < -Math.PI + epsilon || radians > Math.PI - epsilon)
-      {
-        // Exact case for 180 degree rotation.
-        c = -1;
-        s = 0;
-      }
-      else if (radians > -Math.PI / 2 - epsilon && radians < -Math.PI / 2 + epsilon)
-      {
-        // Exact case for 270 degree rotation.
-        c = 0;
-        s = -1;
-      }
-      else
-      {
-        // Arbitrary rotation.
-        c = Math.Cos(radians);
-        s = Math.Sin(radians);
-      }
-
-      // [  c  s ]
-      // [ -s  c ]
-      // [  0  0 ]
-      result.M11 = c;
-      result.M12 = s;
-      result.M21 = -s;
-      result.M22 = c;
-      result.M31 = 0.0;
-      result.M32 = 0.0;
-
-      return result;
+    if (radians > -epsilon && radians < epsilon)
+    {
+      // Exact case for zero rotation.
+      c = 1;
+      s = 0;
     }
+    else if (radians > Math.PI / 2 - epsilon && radians < Math.PI / 2 + epsilon)
+    {
+      // Exact case for 90 degree rotation.
+      c = 0;
+      s = 1;
+    }
+    else if (radians < -Math.PI + epsilon || radians > Math.PI - epsilon)
+    {
+      // Exact case for 180 degree rotation.
+      c = -1;
+      s = 0;
+    }
+    else if (radians > -Math.PI / 2 - epsilon && radians < -Math.PI / 2 + epsilon)
+    {
+      // Exact case for 270 degree rotation.
+      c = 0;
+      s = -1;
+    }
+    else
+    {
+      // Arbitrary rotation.
+      c = Math.Cos(radians);
+      s = Math.Sin(radians);
+    }
+
+    // [  c  s ]
+    // [ -s  c ]
+    // [  0  0 ]
+    result.M11 = c;
+    result.M12 = s;
+    result.M21 = -s;
+    result.M22 = c;
+    result.M31 = 0.0;
+    result.M32 = 0.0;
+
+    return result;
+  }
 
   /// <summary>
   /// Creates a rotation matrix using the given rotation in radians and a center point.
@@ -387,61 +387,61 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>A rotation matrix.</returns>
   public static Matrix3x2 CreateRotation(double radians, Vector2 centerPoint)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      radians = Math.IEEERemainder(radians, Math.PI * 2);
+    radians = Math.IEEERemainder(radians, Math.PI * 2);
 
-      double c,
-        s;
+    double c,
+      s;
 
-      const double epsilon = 0.001 * Math.PI / 180; // 0.1% of a degree
+    const double epsilon = 0.001 * Math.PI / 180; // 0.1% of a degree
 
-      if (radians > -epsilon && radians < epsilon)
-      {
-        // Exact case for zero rotation.
-        c = 1;
-        s = 0;
-      }
-      else if (radians > Math.PI / 2 - epsilon && radians < Math.PI / 2 + epsilon)
-      {
-        // Exact case for 90 degree rotation.
-        c = 0;
-        s = 1;
-      }
-      else if (radians < -Math.PI + epsilon || radians > Math.PI - epsilon)
-      {
-        // Exact case for 180 degree rotation.
-        c = -1;
-        s = 0;
-      }
-      else if (radians > -Math.PI / 2 - epsilon && radians < -Math.PI / 2 + epsilon)
-      {
-        // Exact case for 270 degree rotation.
-        c = 0;
-        s = -1;
-      }
-      else
-      {
-        // Arbitrary rotation.
-        c = Math.Cos(radians);
-        s = Math.Sin(radians);
-      }
-
-      double x = centerPoint.X * (1 - c) + centerPoint.Y * s;
-      double y = centerPoint.Y * (1 - c) - centerPoint.X * s;
-
-      // [  c  s ]
-      // [ -s  c ]
-      // [  x  y ]
-      result.M11 = c;
-      result.M12 = s;
-      result.M21 = -s;
-      result.M22 = c;
-      result.M31 = x;
-      result.M32 = y;
-
-      return result;
+    if (radians > -epsilon && radians < epsilon)
+    {
+      // Exact case for zero rotation.
+      c = 1;
+      s = 0;
     }
+    else if (radians > Math.PI / 2 - epsilon && radians < Math.PI / 2 + epsilon)
+    {
+      // Exact case for 90 degree rotation.
+      c = 0;
+      s = 1;
+    }
+    else if (radians < -Math.PI + epsilon || radians > Math.PI - epsilon)
+    {
+      // Exact case for 180 degree rotation.
+      c = -1;
+      s = 0;
+    }
+    else if (radians > -Math.PI / 2 - epsilon && radians < -Math.PI / 2 + epsilon)
+    {
+      // Exact case for 270 degree rotation.
+      c = 0;
+      s = -1;
+    }
+    else
+    {
+      // Arbitrary rotation.
+      c = Math.Cos(radians);
+      s = Math.Sin(radians);
+    }
+
+    double x = centerPoint.X * (1 - c) + centerPoint.Y * s;
+    double y = centerPoint.Y * (1 - c) - centerPoint.X * s;
+
+    // [  c  s ]
+    // [ -s  c ]
+    // [  x  y ]
+    result.M11 = c;
+    result.M12 = s;
+    result.M21 = -s;
+    result.M22 = c;
+    result.M31 = x;
+    result.M32 = y;
+
+    return result;
+  }
 
   /// <summary>
   /// Calculates the determinant for this matrix.
@@ -474,25 +474,25 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>True if the operation succeeded, False otherwise.</returns>
   public static bool Invert(Matrix3x2 matrix, out Matrix3x2 result)
   {
-      double det = (matrix.M11 * matrix.M22) - (matrix.M21 * matrix.M12);
+    double det = (matrix.M11 * matrix.M22) - (matrix.M21 * matrix.M12);
 
-      if (Math.Abs(det) < double.Epsilon)
-      {
-        result = new Matrix3x2(double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN);
-        return false;
-      }
-
-      double invDet = 1.0 / det;
-
-      result.M11 = matrix.M22 * invDet;
-      result.M12 = -matrix.M12 * invDet;
-      result.M21 = -matrix.M21 * invDet;
-      result.M22 = matrix.M11 * invDet;
-      result.M31 = (matrix.M21 * matrix.M32 - matrix.M31 * matrix.M22) * invDet;
-      result.M32 = (matrix.M31 * matrix.M12 - matrix.M11 * matrix.M32) * invDet;
-
-      return true;
+    if (Math.Abs(det) < double.Epsilon)
+    {
+      result = new Matrix3x2(double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN);
+      return false;
     }
+
+    double invDet = 1.0 / det;
+
+    result.M11 = matrix.M22 * invDet;
+    result.M12 = -matrix.M12 * invDet;
+    result.M21 = -matrix.M21 * invDet;
+    result.M22 = matrix.M11 * invDet;
+    result.M31 = (matrix.M21 * matrix.M32 - matrix.M31 * matrix.M22) * invDet;
+    result.M32 = (matrix.M31 * matrix.M12 - matrix.M11 * matrix.M32) * invDet;
+
+    return true;
+  }
 
   /// <summary>
   /// Linearly interpolates from matrix1 to matrix2, based on the third parameter.
@@ -503,22 +503,22 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>The interpolated matrix.</returns>
   public static Matrix3x2 Lerp(Matrix3x2 matrix1, Matrix3x2 matrix2, double amount)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      // First row
-      result.M11 = matrix1.M11 + (matrix2.M11 - matrix1.M11) * amount;
-      result.M12 = matrix1.M12 + (matrix2.M12 - matrix1.M12) * amount;
+    // First row
+    result.M11 = matrix1.M11 + (matrix2.M11 - matrix1.M11) * amount;
+    result.M12 = matrix1.M12 + (matrix2.M12 - matrix1.M12) * amount;
 
-      // Second row
-      result.M21 = matrix1.M21 + (matrix2.M21 - matrix1.M21) * amount;
-      result.M22 = matrix1.M22 + (matrix2.M22 - matrix1.M22) * amount;
+    // Second row
+    result.M21 = matrix1.M21 + (matrix2.M21 - matrix1.M21) * amount;
+    result.M22 = matrix1.M22 + (matrix2.M22 - matrix1.M22) * amount;
 
-      // Third row
-      result.M31 = matrix1.M31 + (matrix2.M31 - matrix1.M31) * amount;
-      result.M32 = matrix1.M32 + (matrix2.M32 - matrix1.M32) * amount;
+    // Third row
+    result.M31 = matrix1.M31 + (matrix2.M31 - matrix1.M31) * amount;
+    result.M32 = matrix1.M32 + (matrix2.M32 - matrix1.M32) * amount;
 
-      return result;
-    }
+    return result;
+  }
 
   /// <summary>
   /// Negates the given matrix by multiplying all values by -1.
@@ -527,17 +527,17 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>The negated matrix.</returns>
   public static Matrix3x2 Negate(Matrix3x2 value)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      result.M11 = -value.M11;
-      result.M12 = -value.M12;
-      result.M21 = -value.M21;
-      result.M22 = -value.M22;
-      result.M31 = -value.M31;
-      result.M32 = -value.M32;
+    result.M11 = -value.M11;
+    result.M12 = -value.M12;
+    result.M21 = -value.M21;
+    result.M22 = -value.M22;
+    result.M31 = -value.M31;
+    result.M32 = -value.M32;
 
-      return result;
-    }
+    return result;
+  }
 
   /// <summary>
   /// Adds each matrix element in value1 with its corresponding element in value2.
@@ -547,17 +547,17 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>The matrix containing the summed values.</returns>
   public static Matrix3x2 Add(Matrix3x2 value1, Matrix3x2 value2)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      result.M11 = value1.M11 + value2.M11;
-      result.M12 = value1.M12 + value2.M12;
-      result.M21 = value1.M21 + value2.M21;
-      result.M22 = value1.M22 + value2.M22;
-      result.M31 = value1.M31 + value2.M31;
-      result.M32 = value1.M32 + value2.M32;
+    result.M11 = value1.M11 + value2.M11;
+    result.M12 = value1.M12 + value2.M12;
+    result.M21 = value1.M21 + value2.M21;
+    result.M22 = value1.M22 + value2.M22;
+    result.M31 = value1.M31 + value2.M31;
+    result.M32 = value1.M32 + value2.M32;
 
-      return result;
-    }
+    return result;
+  }
 
   /// <summary>
   /// Subtracts each matrix element in value2 from its corresponding element in value1.
@@ -567,17 +567,17 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>The matrix containing the resulting values.</returns>
   public static Matrix3x2 Subtract(Matrix3x2 value1, Matrix3x2 value2)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      result.M11 = value1.M11 - value2.M11;
-      result.M12 = value1.M12 - value2.M12;
-      result.M21 = value1.M21 - value2.M21;
-      result.M22 = value1.M22 - value2.M22;
-      result.M31 = value1.M31 - value2.M31;
-      result.M32 = value1.M32 - value2.M32;
+    result.M11 = value1.M11 - value2.M11;
+    result.M12 = value1.M12 - value2.M12;
+    result.M21 = value1.M21 - value2.M21;
+    result.M22 = value1.M22 - value2.M22;
+    result.M31 = value1.M31 - value2.M31;
+    result.M32 = value1.M32 - value2.M32;
 
-      return result;
-    }
+    return result;
+  }
 
   /// <summary>
   /// Multiplies two matrices together and returns the resulting matrix.
@@ -587,22 +587,22 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>The product matrix.</returns>
   public static Matrix3x2 Multiply(Matrix3x2 value1, Matrix3x2 value2)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      // First row
-      result.M11 = value1.M11 * value2.M11 + value1.M12 * value2.M21;
-      result.M12 = value1.M11 * value2.M12 + value1.M12 * value2.M22;
+    // First row
+    result.M11 = value1.M11 * value2.M11 + value1.M12 * value2.M21;
+    result.M12 = value1.M11 * value2.M12 + value1.M12 * value2.M22;
 
-      // Second row
-      result.M21 = value1.M21 * value2.M11 + value1.M22 * value2.M21;
-      result.M22 = value1.M21 * value2.M12 + value1.M22 * value2.M22;
+    // Second row
+    result.M21 = value1.M21 * value2.M11 + value1.M22 * value2.M21;
+    result.M22 = value1.M21 * value2.M12 + value1.M22 * value2.M22;
 
-      // Third row
-      result.M31 = value1.M31 * value2.M11 + value1.M32 * value2.M21 + value2.M31;
-      result.M32 = value1.M31 * value2.M12 + value1.M32 * value2.M22 + value2.M32;
+    // Third row
+    result.M31 = value1.M31 * value2.M11 + value1.M32 * value2.M21 + value2.M31;
+    result.M32 = value1.M31 * value2.M12 + value1.M32 * value2.M22 + value2.M32;
 
-      return result;
-    }
+    return result;
+  }
 
   /// <summary>
   /// Scales all elements in a matrix by the given scalar factor.
@@ -612,17 +612,17 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>The resulting matrix.</returns>
   public static Matrix3x2 Multiply(Matrix3x2 value1, double value2)
   {
-      Matrix3x2 result;
+    Matrix3x2 result;
 
-      result.M11 = value1.M11 * value2;
-      result.M12 = value1.M12 * value2;
-      result.M21 = value1.M21 * value2;
-      result.M22 = value1.M22 * value2;
-      result.M31 = value1.M31 * value2;
-      result.M32 = value1.M32 * value2;
+    result.M11 = value1.M11 * value2;
+    result.M12 = value1.M12 * value2;
+    result.M21 = value1.M21 * value2;
+    result.M22 = value1.M22 * value2;
+    result.M31 = value1.M31 * value2;
+    result.M32 = value1.M32 * value2;
 
-      return result;
-    }
+    return result;
+  }
 
   /// <summary>
   /// Negates the given matrix by multiplying all values by -1.
@@ -631,17 +631,17 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>The negated matrix.</returns>
   public static Matrix3x2 operator -(Matrix3x2 value)
   {
-      Matrix3x2 m;
+    Matrix3x2 m;
 
-      m.M11 = -value.M11;
-      m.M12 = -value.M12;
-      m.M21 = -value.M21;
-      m.M22 = -value.M22;
-      m.M31 = -value.M31;
-      m.M32 = -value.M32;
+    m.M11 = -value.M11;
+    m.M12 = -value.M12;
+    m.M21 = -value.M21;
+    m.M22 = -value.M22;
+    m.M31 = -value.M31;
+    m.M32 = -value.M32;
 
-      return m;
-    }
+    return m;
+  }
 
   /// <summary>
   /// Adds each matrix element in value1 with its corresponding element in value2.
@@ -651,17 +651,17 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>The matrix containing the summed values.</returns>
   public static Matrix3x2 operator +(Matrix3x2 value1, Matrix3x2 value2)
   {
-      Matrix3x2 m;
+    Matrix3x2 m;
 
-      m.M11 = value1.M11 + value2.M11;
-      m.M12 = value1.M12 + value2.M12;
-      m.M21 = value1.M21 + value2.M21;
-      m.M22 = value1.M22 + value2.M22;
-      m.M31 = value1.M31 + value2.M31;
-      m.M32 = value1.M32 + value2.M32;
+    m.M11 = value1.M11 + value2.M11;
+    m.M12 = value1.M12 + value2.M12;
+    m.M21 = value1.M21 + value2.M21;
+    m.M22 = value1.M22 + value2.M22;
+    m.M31 = value1.M31 + value2.M31;
+    m.M32 = value1.M32 + value2.M32;
 
-      return m;
-    }
+    return m;
+  }
 
   /// <summary>
   /// Subtracts each matrix element in value2 from its corresponding element in value1.
@@ -671,17 +671,17 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>The matrix containing the resulting values.</returns>
   public static Matrix3x2 operator -(Matrix3x2 value1, Matrix3x2 value2)
   {
-      Matrix3x2 m;
+    Matrix3x2 m;
 
-      m.M11 = value1.M11 - value2.M11;
-      m.M12 = value1.M12 - value2.M12;
-      m.M21 = value1.M21 - value2.M21;
-      m.M22 = value1.M22 - value2.M22;
-      m.M31 = value1.M31 - value2.M31;
-      m.M32 = value1.M32 - value2.M32;
+    m.M11 = value1.M11 - value2.M11;
+    m.M12 = value1.M12 - value2.M12;
+    m.M21 = value1.M21 - value2.M21;
+    m.M22 = value1.M22 - value2.M22;
+    m.M31 = value1.M31 - value2.M31;
+    m.M32 = value1.M32 - value2.M32;
 
-      return m;
-    }
+    return m;
+  }
 
   /// <summary>
   /// Multiplies two matrices together and returns the resulting matrix.
@@ -691,22 +691,22 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>The product matrix.</returns>
   public static Matrix3x2 operator *(Matrix3x2 value1, Matrix3x2 value2)
   {
-      Matrix3x2 m;
+    Matrix3x2 m;
 
-      // First row
-      m.M11 = value1.M11 * value2.M11 + value1.M12 * value2.M21;
-      m.M12 = value1.M11 * value2.M12 + value1.M12 * value2.M22;
+    // First row
+    m.M11 = value1.M11 * value2.M11 + value1.M12 * value2.M21;
+    m.M12 = value1.M11 * value2.M12 + value1.M12 * value2.M22;
 
-      // Second row
-      m.M21 = value1.M21 * value2.M11 + value1.M22 * value2.M21;
-      m.M22 = value1.M21 * value2.M12 + value1.M22 * value2.M22;
+    // Second row
+    m.M21 = value1.M21 * value2.M11 + value1.M22 * value2.M21;
+    m.M22 = value1.M21 * value2.M12 + value1.M22 * value2.M22;
 
-      // Third row
-      m.M31 = value1.M31 * value2.M11 + value1.M32 * value2.M21 + value2.M31;
-      m.M32 = value1.M31 * value2.M12 + value1.M32 * value2.M22 + value2.M32;
+    // Third row
+    m.M31 = value1.M31 * value2.M11 + value1.M32 * value2.M21 + value2.M31;
+    m.M32 = value1.M31 * value2.M12 + value1.M32 * value2.M22 + value2.M32;
 
-      return m;
-    }
+    return m;
+  }
 
   /// <summary>
   /// Scales all elements in a matrix by the given scalar factor.
@@ -716,17 +716,17 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>The resulting matrix.</returns>
   public static Matrix3x2 operator *(Matrix3x2 value1, double value2)
   {
-      Matrix3x2 m;
+    Matrix3x2 m;
 
-      m.M11 = value1.M11 * value2;
-      m.M12 = value1.M12 * value2;
-      m.M21 = value1.M21 * value2;
-      m.M22 = value1.M22 * value2;
-      m.M31 = value1.M31 * value2;
-      m.M32 = value1.M32 * value2;
+    m.M11 = value1.M11 * value2;
+    m.M12 = value1.M12 * value2;
+    m.M21 = value1.M21 * value2;
+    m.M22 = value1.M22 * value2;
+    m.M31 = value1.M31 * value2;
+    m.M32 = value1.M32 * value2;
 
-      return m;
-    }
+    return m;
+  }
 
   /// <summary>
   /// Returns a boolean indicating whether the given matrices are equal.
@@ -735,15 +735,15 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <param name="value2">The second source matrix.</param>
   /// <returns>True if the matrices are equal; False otherwise.</returns>
   public static bool operator ==(Matrix3x2 value1, Matrix3x2 value2) =>
-  (
-    value1.M11 == value2.M11
-    && value1.M22 == value2.M22
-    && // Check diagonal element first for early out.
-    value1.M12 == value2.M12
-    && value1.M21 == value2.M21
-    && value1.M31 == value2.M31
-    && value1.M32 == value2.M32
-  );
+    (
+      value1.M11 == value2.M11
+      && value1.M22 == value2.M22
+      && // Check diagonal element first for early out.
+      value1.M12 == value2.M12
+      && value1.M21 == value2.M21
+      && value1.M31 == value2.M31
+      && value1.M32 == value2.M32
+    );
 
   /// <summary>
   /// Returns a boolean indicating whether the given matrices are not equal.
@@ -752,14 +752,14 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <param name="value2">The second source matrix.</param>
   /// <returns>True if the matrices are not equal; False if they are equal.</returns>
   public static bool operator !=(Matrix3x2 value1, Matrix3x2 value2) =>
-  (
-    value1.M11 != value2.M11
-    || value1.M12 != value2.M12
-    || value1.M21 != value2.M21
-    || value1.M22 != value2.M22
-    || value1.M31 != value2.M31
-    || value1.M32 != value2.M32
-  );
+    (
+      value1.M11 != value2.M11
+      || value1.M12 != value2.M12
+      || value1.M21 != value2.M21
+      || value1.M22 != value2.M22
+      || value1.M31 != value2.M31
+      || value1.M32 != value2.M32
+    );
 
   /// <summary>
   /// Returns a boolean indicating whether the matrix is equal to the other given matrix.
@@ -767,15 +767,15 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <param name="other">The other matrix to test equality against.</param>
   /// <returns>True if this matrix is equal to other; False otherwise.</returns>
   public bool Equals(Matrix3x2 other) =>
-  (
-    M11 == other.M11
-    && M22 == other.M22
-    && // Check diagonal element first for early out.
-    M12 == other.M12
-    && M21 == other.M21
-    && M31 == other.M31
-    && M32 == other.M32
-  );
+    (
+      M11 == other.M11
+      && M22 == other.M22
+      && // Check diagonal element first for early out.
+      M12 == other.M12
+      && M21 == other.M21
+      && M31 == other.M31
+      && M32 == other.M32
+    );
 
   /// <summary>
   /// Returns a boolean indicating whether the given Object is equal to this matrix instance.
@@ -784,13 +784,13 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>True if the Object is equal to this matrix; False otherwise.</returns>
   public override bool Equals(object? obj)
   {
-      if (obj is Matrix3x2 x2)
-      {
-        return Equals(x2);
-      }
-
-      return false;
+    if (obj is Matrix3x2 x2)
+    {
+      return Equals(x2);
     }
+
+    return false;
+  }
 
   /// <summary>
   /// Returns a String representing this matrix instance.
@@ -798,18 +798,18 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
   /// <returns>The string representation.</returns>
   public override string ToString()
   {
-      CultureInfo ci = CultureInfo.CurrentCulture;
-      return String.Format(
-        ci,
-        "{{ {{M11:{0} M12:{1}}} {{M21:{2} M22:{3}}} {{M31:{4} M32:{5}}} }}",
-        M11.ToString(ci),
-        M12.ToString(ci),
-        M21.ToString(ci),
-        M22.ToString(ci),
-        M31.ToString(ci),
-        M32.ToString(ci)
-      );
-    }
+    CultureInfo ci = CultureInfo.CurrentCulture;
+    return String.Format(
+      ci,
+      "{{ {{M11:{0} M12:{1}}} {{M21:{2} M22:{3}}} {{M31:{4} M32:{5}}} }}",
+      M11.ToString(ci),
+      M12.ToString(ci),
+      M21.ToString(ci),
+      M22.ToString(ci),
+      M31.ToString(ci),
+      M32.ToString(ci)
+    );
+  }
 
   /// <summary>
   /// Returns the hash code for this instance.

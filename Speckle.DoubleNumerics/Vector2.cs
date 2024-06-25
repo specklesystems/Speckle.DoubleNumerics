@@ -205,7 +205,8 @@ public partial struct Vector2 : IEquatable<Vector2>, IFormattable
   /// <param name="amount">Value between 0 and 1 indicating the weight of the second source vector.</param>
   /// <returns>The interpolated vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector2 Lerp(Vector2 value1, Vector2 value2, double amount) => new(value1.X + (value2.X - value1.X) * amount, value1.Y + (value2.Y - value1.Y) * amount);
+  public static Vector2 Lerp(Vector2 value1, Vector2 value2, double amount) =>
+    new(value1.X + (value2.X - value1.X) * amount, value1.Y + (value2.Y - value1.Y) * amount);
 
   /// <summary>
   /// Transforms a vector by the given matrix.
@@ -240,7 +241,8 @@ public partial struct Vector2 : IEquatable<Vector2>, IFormattable
   /// <param name="matrix">The transformation matrix.</param>
   /// <returns>The transformed vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector2 TransformNormal(Vector2 normal, Matrix3x2 matrix) => new(normal.X * matrix.M11 + normal.Y * matrix.M21, normal.X * matrix.M12 + normal.Y * matrix.M22);
+  public static Vector2 TransformNormal(Vector2 normal, Matrix3x2 matrix) =>
+    new(normal.X * matrix.M11 + normal.Y * matrix.M21, normal.X * matrix.M12 + normal.Y * matrix.M22);
 
   /// <summary>
   /// Transforms a vector normal by the given matrix.
@@ -249,7 +251,8 @@ public partial struct Vector2 : IEquatable<Vector2>, IFormattable
   /// <param name="matrix">The transformation matrix.</param>
   /// <returns>The transformed vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector2 TransformNormal(Vector2 normal, Matrix4x4 matrix) => new(normal.X * matrix.M11 + normal.Y * matrix.M21, normal.X * matrix.M12 + normal.Y * matrix.M22);
+  public static Vector2 TransformNormal(Vector2 normal, Matrix4x4 matrix) =>
+    new(normal.X * matrix.M11 + normal.Y * matrix.M21, normal.X * matrix.M12 + normal.Y * matrix.M22);
 
   /// <summary>
   /// Transforms a vector by the given Quaternion rotation value.

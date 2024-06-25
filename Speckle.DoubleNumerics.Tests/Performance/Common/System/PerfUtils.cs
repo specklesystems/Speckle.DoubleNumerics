@@ -18,8 +18,8 @@ public class PerfUtils
   /// </summary>
   public PerfUtils()
   {
-      _rand = new Random(1234132);
-    }
+    _rand = new Random(1234132);
+  }
 
   /// <summary>
   /// Initializes a new PerfUtils object with the given seed. Use this if also
@@ -28,8 +28,8 @@ public class PerfUtils
   /// </summary>
   public PerfUtils(int seed)
   {
-      _rand = new Random(seed);
-    }
+    _rand = new Random(seed);
+  }
 
   /// <summary>
   /// Helper method to create a string containing a number of random
@@ -37,10 +37,10 @@ public class PerfUtils
   /// </summary>
   public string CreateString(int length)
   {
-      byte[] bytes = new byte[length];
-      _rand.NextBytes(bytes);
-      return Convert.ToBase64String(bytes);
-    }
+    byte[] bytes = new byte[length];
+    _rand.NextBytes(bytes);
+    return Convert.ToBase64String(bytes);
+  }
 
   /// <summary>Gets a test file full path that is associated with the call site.</summary>
   /// <param name="index">An optional index value to use as a suffix on the file name.  Typically a loop index.</param>

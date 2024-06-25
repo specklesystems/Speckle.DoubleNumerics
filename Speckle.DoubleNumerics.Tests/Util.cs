@@ -109,36 +109,28 @@ public static class Util
   }
 
   public static T Sqrt<T>(T value)
-    where T : struct =>
-    (T)(dynamic)(Math.Sqrt((dynamic)value));
+    where T : struct => (T)(dynamic)(Math.Sqrt((dynamic)value));
 
   public static T Multiply<T>(T left, T right)
-    where T : struct =>
-    (T)((dynamic)left * right);
+    where T : struct => (T)((dynamic)left * right);
 
   public static T Divide<T>(T left, T right)
-    where T : struct =>
-    (T)((dynamic)left / right);
+    where T : struct => (T)((dynamic)left / right);
 
   public static T Add<T>(T left, T right)
-    where T : struct =>
-    (T)((dynamic)left + right);
+    where T : struct => (T)((dynamic)left + right);
 
   public static T Subtract<T>(T left, T right)
-    where T : struct =>
-    (T)((dynamic)left - right);
+    where T : struct => (T)((dynamic)left - right);
 
   public static T Xor<T>(T left, T right)
-    where T : struct =>
-    (T)((dynamic)left ^ right);
+    where T : struct => (T)((dynamic)left ^ right);
 
   public static T AndNot<T>(T left, T right)
-    where T : struct =>
-    (T)((dynamic)left & ~(dynamic)right);
+    where T : struct => (T)((dynamic)left & ~(dynamic)right);
 
   public static T OnesComplement<T>(T left)
-    where T : struct =>
-    (T)(~(dynamic)left);
+    where T : struct => (T)(~(dynamic)left);
 
   public static double Clamp(double value, double min, double max) =>
     value > max
@@ -148,12 +140,10 @@ public static class Util
         : value;
 
   public static T Zero<T>()
-    where T : struct =>
-    (T)(dynamic)0;
+    where T : struct => (T)(dynamic)0;
 
   public static T One<T>()
-    where T : struct =>
-    (T)(dynamic)1;
+    where T : struct => (T)(dynamic)1;
 
   public static bool GreaterThan<T>(T left, T right)
     where T : struct

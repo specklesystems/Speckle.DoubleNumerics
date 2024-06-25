@@ -5,6 +5,7 @@
 using System.Runtime.CompilerServices;
 
 namespace Speckle.DoubleNumerics;
+
 // This file contains the definitions for all of the JIT intrinsic methods and properties that are recognized by the current x64 JIT compiler.
 // The implementation defined here is used in any circumstance where the JIT fails to recognize these members as intrinsic.
 // The JIT recognizes these methods and properties by name and signature: if either is changed, the JIT will no longer recognize the member.
@@ -113,7 +114,8 @@ public partial struct Vector3
   /// <param name="vector2">The second vector.</param>
   /// <returns>The dot product.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static double Dot(Vector3 vector1, Vector3 vector2) => vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
+  public static double Dot(Vector3 vector1, Vector3 vector2) =>
+    vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
 
   /// <summary>
   /// Returns a vector whose elements are the minimum of each of the pairs of elements in the two source vectors.
@@ -168,7 +170,8 @@ public partial struct Vector3
   /// <param name="right">The second source vector.</param>
   /// <returns>The summed vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector3 operator +(Vector3 left, Vector3 right) => new(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
+  public static Vector3 operator +(Vector3 left, Vector3 right) =>
+    new(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
 
   /// <summary>
   /// Subtracts the second vector from the first.
@@ -177,7 +180,8 @@ public partial struct Vector3
   /// <param name="right">The second source vector.</param>
   /// <returns>The difference vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector3 operator -(Vector3 left, Vector3 right) => new(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+  public static Vector3 operator -(Vector3 left, Vector3 right) =>
+    new(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
 
   /// <summary>
   /// Multiplies two vectors together.
@@ -186,7 +190,8 @@ public partial struct Vector3
   /// <param name="right">The second source vector.</param>
   /// <returns>The product vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector3 operator *(Vector3 left, Vector3 right) => new(left.X * right.X, left.Y * right.Y, left.Z * right.Z);
+  public static Vector3 operator *(Vector3 left, Vector3 right) =>
+    new(left.X * right.X, left.Y * right.Y, left.Z * right.Z);
 
   /// <summary>
   /// Multiplies a vector by the given scalar.
@@ -213,7 +218,8 @@ public partial struct Vector3
   /// <param name="right">The second source vector.</param>
   /// <returns>The vector resulting from the division.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector3 operator /(Vector3 left, Vector3 right) => new(left.X / right.X, left.Y / right.Y, left.Z / right.Z);
+  public static Vector3 operator /(Vector3 left, Vector3 right) =>
+    new(left.X / right.X, left.Y / right.Y, left.Z / right.Z);
 
   /// <summary>
   /// Divides the vector by the given scalar.
@@ -244,7 +250,8 @@ public partial struct Vector3
   /// <param name="right">The second vector to compare.</param>
   /// <returns>True if the vectors are equal; False otherwise.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static bool operator ==(Vector3 left, Vector3 right) => (left.X == right.X && left.Y == right.Y && left.Z == right.Z);
+  public static bool operator ==(Vector3 left, Vector3 right) =>
+    (left.X == right.X && left.Y == right.Y && left.Z == right.Z);
 
   /// <summary>
   /// Returns a boolean indicating whether the two given vectors are not equal.
@@ -253,7 +260,8 @@ public partial struct Vector3
   /// <param name="right">The second vector to compare.</param>
   /// <returns>True if the vectors are not equal; False if they are equal.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static bool operator !=(Vector3 left, Vector3 right) => (left.X != right.X || left.Y != right.Y || left.Z != right.Z);
+  public static bool operator !=(Vector3 left, Vector3 right) =>
+    (left.X != right.X || left.Y != right.Y || left.Z != right.Z);
 
   #endregion Public Static Operators
 }

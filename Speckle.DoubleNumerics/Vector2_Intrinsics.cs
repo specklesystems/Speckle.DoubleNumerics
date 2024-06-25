@@ -5,6 +5,7 @@
 using System.Runtime.CompilerServices;
 
 namespace Speckle.DoubleNumerics;
+
 // This file contains the definitions for all of the JIT intrinsic methods and properties that are recognized by the current x64 JIT compiler.
 // The implementation defined here is used in any circumstance where the JIT fails to recognize these members as intrinsic.
 // The JIT recognizes these methods and properties by name and signature: if either is changed, the JIT will no longer recognize the member.
@@ -37,9 +38,9 @@ public partial struct Vector2
   /// <param name="y">The Y component.</param>
   public Vector2(Double x, Double y)
   {
-      X = x;
-      Y = y;
-    }
+    X = x;
+    Y = y;
+  }
   #endregion Constructors
 
   #region Public Instance Methods
@@ -60,25 +61,25 @@ public partial struct Vector2
   /// or if there are not enough elements to copy.</exception>
   public void CopyTo(Double[]? array, int index)
   {
-      if (array == null)
-      {
-        // Match the JIT's exception type here. For perf, a NullReference is thrown instead of an ArgumentNull.
-        throw new NullReferenceException(Strings.Arg_NullArgumentNullRef);
-      }
-      if (index < 0 || index >= array.Length)
-      {
-        throw new ArgumentOutOfRangeException(
-          nameof(index),
-          String.Format(Strings.Arg_ArgumentOutOfRangeException, index)
-        );
-      }
-      if ((array.Length - index) < 2)
-      {
-        throw new ArgumentException(String.Format(Strings.Arg_ElementsInSourceIsGreaterThanDestination, index));
-      }
-      array[index] = X;
-      array[index + 1] = Y;
+    if (array == null)
+    {
+      // Match the JIT's exception type here. For perf, a NullReference is thrown instead of an ArgumentNull.
+      throw new NullReferenceException(Strings.Arg_NullArgumentNullRef);
     }
+    if (index < 0 || index >= array.Length)
+    {
+      throw new ArgumentOutOfRangeException(
+        nameof(index),
+        String.Format(Strings.Arg_ArgumentOutOfRangeException, index)
+      );
+    }
+    if ((array.Length - index) < 2)
+    {
+      throw new ArgumentException(String.Format(Strings.Arg_ElementsInSourceIsGreaterThanDestination, index));
+    }
+    array[index] = X;
+    array[index + 1] = Y;
+  }
 
   /// <summary>
   /// Returns a boolean indicating whether the given Vector2 is equal to this Vector2 instance.
@@ -106,7 +107,8 @@ public partial struct Vector2
   /// <param name="value2">The second source vector.</param>
   /// <returns>The minimized vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector2 Min(Vector2 value1, Vector2 value2) => new((value1.X < value2.X) ? value1.X : value2.X, (value1.Y < value2.Y) ? value1.Y : value2.Y);
+  public static Vector2 Min(Vector2 value1, Vector2 value2) =>
+    new((value1.X < value2.X) ? value1.X : value2.X, (value1.Y < value2.Y) ? value1.Y : value2.Y);
 
   /// <summary>
   /// Returns a vector whose elements are the maximum of each of the pairs of elements in the two source vectors
@@ -115,7 +117,8 @@ public partial struct Vector2
   /// <param name="value2">The second source vector</param>
   /// <returns>The maximized vector</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector2 Max(Vector2 value1, Vector2 value2) => new((value1.X > value2.X) ? value1.X : value2.X, (value1.Y > value2.Y) ? value1.Y : value2.Y);
+  public static Vector2 Max(Vector2 value1, Vector2 value2) =>
+    new((value1.X > value2.X) ? value1.X : value2.X, (value1.Y > value2.Y) ? value1.Y : value2.Y);
 
   /// <summary>
   /// Returns a vector whose elements are the absolute values of each of the source vector's elements.
@@ -199,9 +202,9 @@ public partial struct Vector2
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Vector2 operator /(Vector2 value1, double value2)
   {
-      double invDiv = 1.0 / value2;
-      return new Vector2(value1.X * invDiv, value1.Y * invDiv);
-    }
+    double invDiv = 1.0 / value2;
+    return new Vector2(value1.X * invDiv, value1.Y * invDiv);
+  }
 
   /// <summary>
   /// Negates a given vector.

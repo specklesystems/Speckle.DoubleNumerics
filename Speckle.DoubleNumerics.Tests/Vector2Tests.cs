@@ -70,11 +70,7 @@ public class Vector2Tests
     Vector2 v1 = new Vector2(2.0, 3.0);
 
     string v1str = v1.ToString();
-    string expectedv1 = string.Format(
-      CultureInfo.CurrentCulture,
-      "<{1:G}{0} {2:G}>",
-      new object[] { separator, 2, 3 }
-    );
+    string expectedv1 = string.Format(CultureInfo.CurrentCulture, "<{1:G}{0} {2:G}>", new object[] { separator, 2, 3 });
     Assert.Equal(expectedv1, v1str);
 
     string v1strformatted = v1.ToString("c", CultureInfo.CurrentCulture);

@@ -158,8 +158,7 @@ public class Matrix3x2Tests
   [Fact]
   public void Matrix3x2InvertAffineTest()
   {
-    Matrix3x2 mtx =
-      Matrix3x2.CreateRotation(2) * Matrix3x2.CreateScale(23, -42) * Matrix3x2.CreateTranslation(17, 53);
+    Matrix3x2 mtx = Matrix3x2.CreateRotation(2) * Matrix3x2.CreateScale(23, -42) * Matrix3x2.CreateTranslation(17, 53);
 
     Matrix3x2 actual;
     Assert.True(Matrix3x2.Invert(mtx, out actual));
@@ -298,11 +297,11 @@ public class Matrix3x2Tests
     // all the elements in Actual is NaN
     Assert.True(
       double.IsNaN(actual.M11)
-      && double.IsNaN(actual.M12)
-      && double.IsNaN(actual.M21)
-      && double.IsNaN(actual.M22)
-      && double.IsNaN(actual.M31)
-      && double.IsNaN(actual.M32),
+        && double.IsNaN(actual.M12)
+        && double.IsNaN(actual.M21)
+        && double.IsNaN(actual.M22)
+        && double.IsNaN(actual.M31)
+        && double.IsNaN(actual.M32),
       "Matrix3x2.Invert did not return the expected value."
     );
   }

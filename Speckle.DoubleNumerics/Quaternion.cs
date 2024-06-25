@@ -51,11 +51,11 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <param name="w">The W component of the Quaternion.</param>
   public Quaternion(double x, double y, double z, double w)
   {
-      X = x;
-      Y = y;
-      Z = z;
-      W = w;
-    }
+    X = x;
+    Y = y;
+    Z = z;
+    W = w;
+  }
 
   /// <summary>
   /// Constructs a Quaternion from the given vector and rotation parts.
@@ -64,11 +64,11 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <param name="scalarPart">The rotation part of the Quaternion.</param>
   public Quaternion(Vector3 vectorPart, double scalarPart)
   {
-      X = vectorPart.X;
-      Y = vectorPart.Y;
-      Z = vectorPart.Z;
-      W = scalarPart;
-    }
+    X = vectorPart.X;
+    Y = vectorPart.Y;
+    Z = vectorPart.Z;
+    W = scalarPart;
+  }
 
   /// <summary>
   /// Calculates the length of the Quaternion.
@@ -76,10 +76,10 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The computed length of the Quaternion.</returns>
   public double Length()
   {
-      double ls = X * X + Y * Y + Z * Z + W * W;
+    double ls = X * X + Y * Y + Z * Z + W * W;
 
-      return Math.Sqrt(ls);
-    }
+    return Math.Sqrt(ls);
+  }
 
   /// <summary>
   /// Calculates the length squared of the Quaternion. This operation is cheaper than Length().
@@ -94,19 +94,19 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The normalized Quaternion.</returns>
   public static Quaternion Normalize(Quaternion value)
   {
-      Quaternion ans;
+    Quaternion ans;
 
-      double ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W;
+    double ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W;
 
-      double invNorm = 1.0 / Math.Sqrt(ls);
+    double invNorm = 1.0 / Math.Sqrt(ls);
 
-      ans.X = value.X * invNorm;
-      ans.Y = value.Y * invNorm;
-      ans.Z = value.Z * invNorm;
-      ans.W = value.W * invNorm;
+    ans.X = value.X * invNorm;
+    ans.Y = value.Y * invNorm;
+    ans.Z = value.Z * invNorm;
+    ans.W = value.W * invNorm;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Creates the conjugate of a specified Quaternion.
@@ -115,15 +115,15 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>A new Quaternion that is the conjugate of the specified one.</returns>
   public static Quaternion Conjugate(Quaternion value)
   {
-      Quaternion ans;
+    Quaternion ans;
 
-      ans.X = -value.X;
-      ans.Y = -value.Y;
-      ans.Z = -value.Z;
-      ans.W = value.W;
+    ans.X = -value.X;
+    ans.Y = -value.Y;
+    ans.Z = -value.Z;
+    ans.W = value.W;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Returns the inverse of a Quaternion.
@@ -132,22 +132,22 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The inverted Quaternion.</returns>
   public static Quaternion Inverse(Quaternion value)
   {
-      //  -1   (       a              -v       )
-      // q   = ( -------------   ------------- )
-      //       (  a^2 + |v|^2  ,  a^2 + |v|^2  )
+    //  -1   (       a              -v       )
+    // q   = ( -------------   ------------- )
+    //       (  a^2 + |v|^2  ,  a^2 + |v|^2  )
 
-      Quaternion ans;
+    Quaternion ans;
 
-      double ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W;
-      double invNorm = 1.0 / ls;
+    double ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W;
+    double invNorm = 1.0 / ls;
 
-      ans.X = -value.X * invNorm;
-      ans.Y = -value.Y * invNorm;
-      ans.Z = -value.Z * invNorm;
-      ans.W = value.W * invNorm;
+    ans.X = -value.X * invNorm;
+    ans.Y = -value.Y * invNorm;
+    ans.Z = -value.Z * invNorm;
+    ans.W = value.W * invNorm;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Creates a Quaternion from a normalized vector axis and an angle to rotate about the vector.
@@ -158,19 +158,19 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The created Quaternion.</returns>
   public static Quaternion CreateFromAxisAngle(Vector3 axis, double angle)
   {
-      Quaternion ans;
+    Quaternion ans;
 
-      double halfAngle = angle * 0.5;
-      double s = Math.Sin(halfAngle);
-      double c = Math.Cos(halfAngle);
+    double halfAngle = angle * 0.5;
+    double s = Math.Sin(halfAngle);
+    double c = Math.Cos(halfAngle);
 
-      ans.X = axis.X * s;
-      ans.Y = axis.Y * s;
-      ans.Z = axis.Z * s;
-      ans.W = c;
+    ans.X = axis.X * s;
+    ans.Y = axis.Y * s;
+    ans.Z = axis.Z * s;
+    ans.W = c;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Creates a new Quaternion from the given yaw, pitch, and roll, in radians.
@@ -181,36 +181,36 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns></returns>
   public static Quaternion CreateFromYawPitchRoll(double yaw, double pitch, double roll)
   {
-      //  Roll first, about axis the object is facing, then
-      //  pitch upward, then yaw to face into the new heading
-      double sr,
-        cr,
-        sp,
-        cp,
-        sy,
-        cy;
+    //  Roll first, about axis the object is facing, then
+    //  pitch upward, then yaw to face into the new heading
+    double sr,
+      cr,
+      sp,
+      cp,
+      sy,
+      cy;
 
-      double halfRoll = roll * 0.5;
-      sr = Math.Sin(halfRoll);
-      cr = Math.Cos(halfRoll);
+    double halfRoll = roll * 0.5;
+    sr = Math.Sin(halfRoll);
+    cr = Math.Cos(halfRoll);
 
-      double halfPitch = pitch * 0.5;
-      sp = Math.Sin(halfPitch);
-      cp = Math.Cos(halfPitch);
+    double halfPitch = pitch * 0.5;
+    sp = Math.Sin(halfPitch);
+    cp = Math.Cos(halfPitch);
 
-      double halfYaw = yaw * 0.5;
-      sy = Math.Sin(halfYaw);
-      cy = Math.Cos(halfYaw);
+    double halfYaw = yaw * 0.5;
+    sy = Math.Sin(halfYaw);
+    cy = Math.Cos(halfYaw);
 
-      Quaternion result;
+    Quaternion result;
 
-      result.X = cy * sp * cr + sy * cp * sr;
-      result.Y = sy * cp * cr - cy * sp * sr;
-      result.Z = cy * cp * sr - sy * sp * cr;
-      result.W = cy * cp * cr + sy * sp * sr;
+    result.X = cy * sp * cr + sy * cp * sr;
+    result.Y = sy * cp * cr - cy * sp * sr;
+    result.Z = cy * cp * sr - sy * sp * cr;
+    result.W = cy * cp * cr + sy * sp * sr;
 
-      return result;
-    }
+    return result;
+  }
 
   /// <summary>
   /// Creates a Quaternion from the given rotation matrix.
@@ -219,52 +219,52 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The created Quaternion.</returns>
   public static Quaternion CreateFromRotationMatrix(Matrix4x4 matrix)
   {
-      double trace = matrix.M11 + matrix.M22 + matrix.M33;
+    double trace = matrix.M11 + matrix.M22 + matrix.M33;
 
-      Quaternion q = new();
+    Quaternion q = new();
 
-      if (trace > 0.0)
+    if (trace > 0.0)
+    {
+      double s = Math.Sqrt(trace + 1.0);
+      q.W = s * 0.5;
+      s = 0.5 / s;
+      q.X = (matrix.M23 - matrix.M32) * s;
+      q.Y = (matrix.M31 - matrix.M13) * s;
+      q.Z = (matrix.M12 - matrix.M21) * s;
+    }
+    else
+    {
+      if (matrix.M11 >= matrix.M22 && matrix.M11 >= matrix.M33)
       {
-        double s = Math.Sqrt(trace + 1.0);
-        q.W = s * 0.5;
-        s = 0.5 / s;
-        q.X = (matrix.M23 - matrix.M32) * s;
-        q.Y = (matrix.M31 - matrix.M13) * s;
-        q.Z = (matrix.M12 - matrix.M21) * s;
+        double s = Math.Sqrt(1.0 + matrix.M11 - matrix.M22 - matrix.M33);
+        double invS = 0.5 / s;
+        q.X = 0.5 * s;
+        q.Y = (matrix.M12 + matrix.M21) * invS;
+        q.Z = (matrix.M13 + matrix.M31) * invS;
+        q.W = (matrix.M23 - matrix.M32) * invS;
+      }
+      else if (matrix.M22 > matrix.M33)
+      {
+        double s = Math.Sqrt(1.0 + matrix.M22 - matrix.M11 - matrix.M33);
+        double invS = 0.5 / s;
+        q.X = (matrix.M21 + matrix.M12) * invS;
+        q.Y = 0.5 * s;
+        q.Z = (matrix.M32 + matrix.M23) * invS;
+        q.W = (matrix.M31 - matrix.M13) * invS;
       }
       else
       {
-        if (matrix.M11 >= matrix.M22 && matrix.M11 >= matrix.M33)
-        {
-          double s = Math.Sqrt(1.0 + matrix.M11 - matrix.M22 - matrix.M33);
-          double invS = 0.5 / s;
-          q.X = 0.5 * s;
-          q.Y = (matrix.M12 + matrix.M21) * invS;
-          q.Z = (matrix.M13 + matrix.M31) * invS;
-          q.W = (matrix.M23 - matrix.M32) * invS;
-        }
-        else if (matrix.M22 > matrix.M33)
-        {
-          double s = Math.Sqrt(1.0 + matrix.M22 - matrix.M11 - matrix.M33);
-          double invS = 0.5 / s;
-          q.X = (matrix.M21 + matrix.M12) * invS;
-          q.Y = 0.5 * s;
-          q.Z = (matrix.M32 + matrix.M23) * invS;
-          q.W = (matrix.M31 - matrix.M13) * invS;
-        }
-        else
-        {
-          double s = Math.Sqrt(1.0 + matrix.M33 - matrix.M11 - matrix.M22);
-          double invS = 0.5 / s;
-          q.X = (matrix.M31 + matrix.M13) * invS;
-          q.Y = (matrix.M32 + matrix.M23) * invS;
-          q.Z = 0.5 * s;
-          q.W = (matrix.M12 - matrix.M21) * invS;
-        }
+        double s = Math.Sqrt(1.0 + matrix.M33 - matrix.M11 - matrix.M22);
+        double invS = 0.5 / s;
+        q.X = (matrix.M31 + matrix.M13) * invS;
+        q.Y = (matrix.M32 + matrix.M23) * invS;
+        q.Z = 0.5 * s;
+        q.W = (matrix.M12 - matrix.M21) * invS;
       }
-
-      return q;
     }
+
+    return q;
+  }
 
   /// <summary>
   /// Calculates the dot product of two Quaternions.
@@ -287,51 +287,51 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The interpolated Quaternion.</returns>
   public static Quaternion Slerp(Quaternion quaternion1, Quaternion quaternion2, double amount)
   {
-      const double epsilon = 1e-6;
+    const double epsilon = 1e-6;
 
-      double t = amount;
+    double t = amount;
 
-      double cosOmega =
-        quaternion1.X * quaternion2.X
-        + quaternion1.Y * quaternion2.Y
-        + quaternion1.Z * quaternion2.Z
-        + quaternion1.W * quaternion2.W;
+    double cosOmega =
+      quaternion1.X * quaternion2.X
+      + quaternion1.Y * quaternion2.Y
+      + quaternion1.Z * quaternion2.Z
+      + quaternion1.W * quaternion2.W;
 
-      bool flip = false;
+    bool flip = false;
 
-      if (cosOmega < 0.0)
-      {
-        flip = true;
-        cosOmega = -cosOmega;
-      }
-
-      double s1,
-        s2;
-
-      if (cosOmega > (1.0 - epsilon))
-      {
-        // Too close, do straight linear interpolation.
-        s1 = 1.0 - t;
-        s2 = (flip) ? -t : t;
-      }
-      else
-      {
-        double omega = Math.Acos(cosOmega);
-        double invSinOmega = 1 / Math.Sin(omega);
-
-        s1 = Math.Sin((1.0 - t) * omega) * invSinOmega;
-        s2 = (flip) ? -Math.Sin(t * omega) * invSinOmega : Math.Sin(t * omega) * invSinOmega;
-      }
-
-      Quaternion ans;
-
-      ans.X = s1 * quaternion1.X + s2 * quaternion2.X;
-      ans.Y = s1 * quaternion1.Y + s2 * quaternion2.Y;
-      ans.Z = s1 * quaternion1.Z + s2 * quaternion2.Z;
-      ans.W = s1 * quaternion1.W + s2 * quaternion2.W;
-
-      return ans;
+    if (cosOmega < 0.0)
+    {
+      flip = true;
+      cosOmega = -cosOmega;
     }
+
+    double s1,
+      s2;
+
+    if (cosOmega > (1.0 - epsilon))
+    {
+      // Too close, do straight linear interpolation.
+      s1 = 1.0 - t;
+      s2 = (flip) ? -t : t;
+    }
+    else
+    {
+      double omega = Math.Acos(cosOmega);
+      double invSinOmega = 1 / Math.Sin(omega);
+
+      s1 = Math.Sin((1.0 - t) * omega) * invSinOmega;
+      s2 = (flip) ? -Math.Sin(t * omega) * invSinOmega : Math.Sin(t * omega) * invSinOmega;
+    }
+
+    Quaternion ans;
+
+    ans.X = s1 * quaternion1.X + s2 * quaternion2.X;
+    ans.Y = s1 * quaternion1.Y + s2 * quaternion2.Y;
+    ans.Z = s1 * quaternion1.Z + s2 * quaternion2.Z;
+    ans.W = s1 * quaternion1.W + s2 * quaternion2.W;
+
+    return ans;
+  }
 
   /// <summary>
   ///  Linearly interpolates between two quaternions.
@@ -342,43 +342,43 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The interpolated Quaternion.</returns>
   public static Quaternion Lerp(Quaternion quaternion1, Quaternion quaternion2, double amount)
   {
-      double t = amount;
-      double t1 = 1.0 - t;
+    double t = amount;
+    double t1 = 1.0 - t;
 
-      Quaternion r = new();
+    Quaternion r = new();
 
-      double dot =
-        quaternion1.X * quaternion2.X
-        + quaternion1.Y * quaternion2.Y
-        + quaternion1.Z * quaternion2.Z
-        + quaternion1.W * quaternion2.W;
+    double dot =
+      quaternion1.X * quaternion2.X
+      + quaternion1.Y * quaternion2.Y
+      + quaternion1.Z * quaternion2.Z
+      + quaternion1.W * quaternion2.W;
 
-      if (dot >= 0.0)
-      {
-        r.X = t1 * quaternion1.X + t * quaternion2.X;
-        r.Y = t1 * quaternion1.Y + t * quaternion2.Y;
-        r.Z = t1 * quaternion1.Z + t * quaternion2.Z;
-        r.W = t1 * quaternion1.W + t * quaternion2.W;
-      }
-      else
-      {
-        r.X = t1 * quaternion1.X - t * quaternion2.X;
-        r.Y = t1 * quaternion1.Y - t * quaternion2.Y;
-        r.Z = t1 * quaternion1.Z - t * quaternion2.Z;
-        r.W = t1 * quaternion1.W - t * quaternion2.W;
-      }
-
-      // Normalize it.
-      double ls = r.X * r.X + r.Y * r.Y + r.Z * r.Z + r.W * r.W;
-      double invNorm = 1.0 / Math.Sqrt(ls);
-
-      r.X *= invNorm;
-      r.Y *= invNorm;
-      r.Z *= invNorm;
-      r.W *= invNorm;
-
-      return r;
+    if (dot >= 0.0)
+    {
+      r.X = t1 * quaternion1.X + t * quaternion2.X;
+      r.Y = t1 * quaternion1.Y + t * quaternion2.Y;
+      r.Z = t1 * quaternion1.Z + t * quaternion2.Z;
+      r.W = t1 * quaternion1.W + t * quaternion2.W;
     }
+    else
+    {
+      r.X = t1 * quaternion1.X - t * quaternion2.X;
+      r.Y = t1 * quaternion1.Y - t * quaternion2.Y;
+      r.Z = t1 * quaternion1.Z - t * quaternion2.Z;
+      r.W = t1 * quaternion1.W - t * quaternion2.W;
+    }
+
+    // Normalize it.
+    double ls = r.X * r.X + r.Y * r.Y + r.Z * r.Z + r.W * r.W;
+    double invNorm = 1.0 / Math.Sqrt(ls);
+
+    r.X *= invNorm;
+    r.Y *= invNorm;
+    r.Z *= invNorm;
+    r.W *= invNorm;
+
+    return r;
+  }
 
   /// <summary>
   /// Concatenates two Quaternions; the result represents the value1 rotation followed by the value2 rotation.
@@ -388,34 +388,34 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>A new Quaternion representing the concatenation of the value1 rotation followed by the value2 rotation.</returns>
   public static Quaternion Concatenate(Quaternion value1, Quaternion value2)
   {
-      Quaternion ans;
+    Quaternion ans;
 
-      // Concatenate rotation is actually q2 * q1 instead of q1 * q2.
-      // So that's why value2 goes q1 and value1 goes q2.
-      double q1x = value2.X;
-      double q1y = value2.Y;
-      double q1z = value2.Z;
-      double q1w = value2.W;
+    // Concatenate rotation is actually q2 * q1 instead of q1 * q2.
+    // So that's why value2 goes q1 and value1 goes q2.
+    double q1x = value2.X;
+    double q1y = value2.Y;
+    double q1z = value2.Z;
+    double q1w = value2.W;
 
-      double q2x = value1.X;
-      double q2y = value1.Y;
-      double q2z = value1.Z;
-      double q2w = value1.W;
+    double q2x = value1.X;
+    double q2y = value1.Y;
+    double q2z = value1.Z;
+    double q2w = value1.W;
 
-      // cross(av, bv)
-      double cx = q1y * q2z - q1z * q2y;
-      double cy = q1z * q2x - q1x * q2z;
-      double cz = q1x * q2y - q1y * q2x;
+    // cross(av, bv)
+    double cx = q1y * q2z - q1z * q2y;
+    double cy = q1z * q2x - q1x * q2z;
+    double cz = q1x * q2y - q1y * q2x;
 
-      double dot = q1x * q2x + q1y * q2y + q1z * q2z;
+    double dot = q1x * q2x + q1y * q2y + q1z * q2z;
 
-      ans.X = q1x * q2w + q2x * q1w + cx;
-      ans.Y = q1y * q2w + q2y * q1w + cy;
-      ans.Z = q1z * q2w + q2z * q1w + cz;
-      ans.W = q1w * q2w - dot;
+    ans.X = q1x * q2w + q2x * q1w + cx;
+    ans.Y = q1y * q2w + q2y * q1w + cy;
+    ans.Z = q1z * q2w + q2z * q1w + cz;
+    ans.W = q1w * q2w - dot;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Flips the sign of each component of the quaternion.
@@ -424,15 +424,15 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The negated Quaternion.</returns>
   public static Quaternion Negate(Quaternion value)
   {
-      Quaternion ans;
+    Quaternion ans;
 
-      ans.X = -value.X;
-      ans.Y = -value.Y;
-      ans.Z = -value.Z;
-      ans.W = -value.W;
+    ans.X = -value.X;
+    ans.Y = -value.Y;
+    ans.Z = -value.Z;
+    ans.W = -value.W;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Adds two Quaternions element-by-element.
@@ -442,15 +442,15 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The result of adding the Quaternions.</returns>
   public static Quaternion Add(Quaternion value1, Quaternion value2)
   {
-      Quaternion ans;
+    Quaternion ans;
 
-      ans.X = value1.X + value2.X;
-      ans.Y = value1.Y + value2.Y;
-      ans.Z = value1.Z + value2.Z;
-      ans.W = value1.W + value2.W;
+    ans.X = value1.X + value2.X;
+    ans.Y = value1.Y + value2.Y;
+    ans.Z = value1.Z + value2.Z;
+    ans.W = value1.W + value2.W;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Subtracts one Quaternion from another.
@@ -460,15 +460,15 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The result of the subtraction.</returns>
   public static Quaternion Subtract(Quaternion value1, Quaternion value2)
   {
-      Quaternion ans;
+    Quaternion ans;
 
-      ans.X = value1.X - value2.X;
-      ans.Y = value1.Y - value2.Y;
-      ans.Z = value1.Z - value2.Z;
-      ans.W = value1.W - value2.W;
+    ans.X = value1.X - value2.X;
+    ans.Y = value1.Y - value2.Y;
+    ans.Z = value1.Z - value2.Z;
+    ans.W = value1.W - value2.W;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Multiplies two Quaternions together.
@@ -478,32 +478,32 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The result of the multiplication.</returns>
   public static Quaternion Multiply(Quaternion value1, Quaternion value2)
   {
-      Quaternion ans;
+    Quaternion ans;
 
-      double q1x = value1.X;
-      double q1y = value1.Y;
-      double q1z = value1.Z;
-      double q1w = value1.W;
+    double q1x = value1.X;
+    double q1y = value1.Y;
+    double q1z = value1.Z;
+    double q1w = value1.W;
 
-      double q2x = value2.X;
-      double q2y = value2.Y;
-      double q2z = value2.Z;
-      double q2w = value2.W;
+    double q2x = value2.X;
+    double q2y = value2.Y;
+    double q2z = value2.Z;
+    double q2w = value2.W;
 
-      // cross(av, bv)
-      double cx = q1y * q2z - q1z * q2y;
-      double cy = q1z * q2x - q1x * q2z;
-      double cz = q1x * q2y - q1y * q2x;
+    // cross(av, bv)
+    double cx = q1y * q2z - q1z * q2y;
+    double cy = q1z * q2x - q1x * q2z;
+    double cz = q1x * q2y - q1y * q2x;
 
-      double dot = q1x * q2x + q1y * q2y + q1z * q2z;
+    double dot = q1x * q2x + q1y * q2y + q1z * q2z;
 
-      ans.X = q1x * q2w + q2x * q1w + cx;
-      ans.Y = q1y * q2w + q2y * q1w + cy;
-      ans.Z = q1z * q2w + q2z * q1w + cz;
-      ans.W = q1w * q2w - dot;
+    ans.X = q1x * q2w + q2x * q1w + cx;
+    ans.Y = q1y * q2w + q2y * q1w + cy;
+    ans.Z = q1z * q2w + q2z * q1w + cz;
+    ans.W = q1w * q2w - dot;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Multiplies a Quaternion by a scalar value.
@@ -513,15 +513,15 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The result of the multiplication.</returns>
   public static Quaternion Multiply(Quaternion value1, double value2)
   {
-      Quaternion ans;
+    Quaternion ans;
 
-      ans.X = value1.X * value2;
-      ans.Y = value1.Y * value2;
-      ans.Z = value1.Z * value2;
-      ans.W = value1.W * value2;
+    ans.X = value1.X * value2;
+    ans.Y = value1.Y * value2;
+    ans.Z = value1.Z * value2;
+    ans.W = value1.W * value2;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Divides a Quaternion by another Quaternion.
@@ -531,40 +531,40 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The result of the division.</returns>
   public static Quaternion Divide(Quaternion value1, Quaternion value2)
   {
-      Quaternion ans;
+    Quaternion ans;
 
-      double q1x = value1.X;
-      double q1y = value1.Y;
-      double q1z = value1.Z;
-      double q1w = value1.W;
+    double q1x = value1.X;
+    double q1y = value1.Y;
+    double q1z = value1.Z;
+    double q1w = value1.W;
 
-      //-------------------------------------
-      // Inverse part.
-      double ls = value2.X * value2.X + value2.Y * value2.Y + value2.Z * value2.Z + value2.W * value2.W;
-      double invNorm = 1.0 / ls;
+    //-------------------------------------
+    // Inverse part.
+    double ls = value2.X * value2.X + value2.Y * value2.Y + value2.Z * value2.Z + value2.W * value2.W;
+    double invNorm = 1.0 / ls;
 
-      double q2x = -value2.X * invNorm;
-      double q2y = -value2.Y * invNorm;
-      double q2z = -value2.Z * invNorm;
-      double q2w = value2.W * invNorm;
+    double q2x = -value2.X * invNorm;
+    double q2y = -value2.Y * invNorm;
+    double q2z = -value2.Z * invNorm;
+    double q2w = value2.W * invNorm;
 
-      //-------------------------------------
-      // Multiply part.
+    //-------------------------------------
+    // Multiply part.
 
-      // cross(av, bv)
-      double cx = q1y * q2z - q1z * q2y;
-      double cy = q1z * q2x - q1x * q2z;
-      double cz = q1x * q2y - q1y * q2x;
+    // cross(av, bv)
+    double cx = q1y * q2z - q1z * q2y;
+    double cy = q1z * q2x - q1x * q2z;
+    double cz = q1x * q2y - q1y * q2x;
 
-      double dot = q1x * q2x + q1y * q2y + q1z * q2z;
+    double dot = q1x * q2x + q1y * q2y + q1z * q2z;
 
-      ans.X = q1x * q2w + q2x * q1w + cx;
-      ans.Y = q1y * q2w + q2y * q1w + cy;
-      ans.Z = q1z * q2w + q2z * q1w + cz;
-      ans.W = q1w * q2w - dot;
+    ans.X = q1x * q2w + q2x * q1w + cx;
+    ans.Y = q1y * q2w + q2y * q1w + cy;
+    ans.Z = q1z * q2w + q2z * q1w + cz;
+    ans.W = q1w * q2w - dot;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Flips the sign of each component of the quaternion.
@@ -573,15 +573,15 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The negated Quaternion.</returns>
   public static Quaternion operator -(Quaternion value)
   {
-      Quaternion ans;
+    Quaternion ans;
 
-      ans.X = -value.X;
-      ans.Y = -value.Y;
-      ans.Z = -value.Z;
-      ans.W = -value.W;
+    ans.X = -value.X;
+    ans.Y = -value.Y;
+    ans.Z = -value.Z;
+    ans.W = -value.W;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Adds two Quaternions element-by-element.
@@ -591,15 +591,15 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The result of adding the Quaternions.</returns>
   public static Quaternion operator +(Quaternion value1, Quaternion value2)
   {
-      Quaternion ans;
+    Quaternion ans;
 
-      ans.X = value1.X + value2.X;
-      ans.Y = value1.Y + value2.Y;
-      ans.Z = value1.Z + value2.Z;
-      ans.W = value1.W + value2.W;
+    ans.X = value1.X + value2.X;
+    ans.Y = value1.Y + value2.Y;
+    ans.Z = value1.Z + value2.Z;
+    ans.W = value1.W + value2.W;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Subtracts one Quaternion from another.
@@ -609,15 +609,15 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The result of the subtraction.</returns>
   public static Quaternion operator -(Quaternion value1, Quaternion value2)
   {
-      Quaternion ans;
+    Quaternion ans;
 
-      ans.X = value1.X - value2.X;
-      ans.Y = value1.Y - value2.Y;
-      ans.Z = value1.Z - value2.Z;
-      ans.W = value1.W - value2.W;
+    ans.X = value1.X - value2.X;
+    ans.Y = value1.Y - value2.Y;
+    ans.Z = value1.Z - value2.Z;
+    ans.W = value1.W - value2.W;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Multiplies two Quaternions together.
@@ -627,32 +627,32 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The result of the multiplication.</returns>
   public static Quaternion operator *(Quaternion value1, Quaternion value2)
   {
-      Quaternion ans;
+    Quaternion ans;
 
-      double q1x = value1.X;
-      double q1y = value1.Y;
-      double q1z = value1.Z;
-      double q1w = value1.W;
+    double q1x = value1.X;
+    double q1y = value1.Y;
+    double q1z = value1.Z;
+    double q1w = value1.W;
 
-      double q2x = value2.X;
-      double q2y = value2.Y;
-      double q2z = value2.Z;
-      double q2w = value2.W;
+    double q2x = value2.X;
+    double q2y = value2.Y;
+    double q2z = value2.Z;
+    double q2w = value2.W;
 
-      // cross(av, bv)
-      double cx = q1y * q2z - q1z * q2y;
-      double cy = q1z * q2x - q1x * q2z;
-      double cz = q1x * q2y - q1y * q2x;
+    // cross(av, bv)
+    double cx = q1y * q2z - q1z * q2y;
+    double cy = q1z * q2x - q1x * q2z;
+    double cz = q1x * q2y - q1y * q2x;
 
-      double dot = q1x * q2x + q1y * q2y + q1z * q2z;
+    double dot = q1x * q2x + q1y * q2y + q1z * q2z;
 
-      ans.X = q1x * q2w + q2x * q1w + cx;
-      ans.Y = q1y * q2w + q2y * q1w + cy;
-      ans.Z = q1z * q2w + q2z * q1w + cz;
-      ans.W = q1w * q2w - dot;
+    ans.X = q1x * q2w + q2x * q1w + cx;
+    ans.Y = q1y * q2w + q2y * q1w + cy;
+    ans.Z = q1z * q2w + q2z * q1w + cz;
+    ans.W = q1w * q2w - dot;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Multiplies a Quaternion by a scalar value.
@@ -662,15 +662,15 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The result of the multiplication.</returns>
   public static Quaternion operator *(Quaternion value1, double value2)
   {
-      Quaternion ans;
+    Quaternion ans;
 
-      ans.X = value1.X * value2;
-      ans.Y = value1.Y * value2;
-      ans.Z = value1.Z * value2;
-      ans.W = value1.W * value2;
+    ans.X = value1.X * value2;
+    ans.Y = value1.Y * value2;
+    ans.Z = value1.Z * value2;
+    ans.W = value1.W * value2;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Divides a Quaternion by another Quaternion.
@@ -680,40 +680,40 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The result of the division.</returns>
   public static Quaternion operator /(Quaternion value1, Quaternion value2)
   {
-      Quaternion ans;
+    Quaternion ans;
 
-      double q1x = value1.X;
-      double q1y = value1.Y;
-      double q1z = value1.Z;
-      double q1w = value1.W;
+    double q1x = value1.X;
+    double q1y = value1.Y;
+    double q1z = value1.Z;
+    double q1w = value1.W;
 
-      //-------------------------------------
-      // Inverse part.
-      double ls = value2.X * value2.X + value2.Y * value2.Y + value2.Z * value2.Z + value2.W * value2.W;
-      double invNorm = 1.0 / ls;
+    //-------------------------------------
+    // Inverse part.
+    double ls = value2.X * value2.X + value2.Y * value2.Y + value2.Z * value2.Z + value2.W * value2.W;
+    double invNorm = 1.0 / ls;
 
-      double q2x = -value2.X * invNorm;
-      double q2y = -value2.Y * invNorm;
-      double q2z = -value2.Z * invNorm;
-      double q2w = value2.W * invNorm;
+    double q2x = -value2.X * invNorm;
+    double q2y = -value2.Y * invNorm;
+    double q2z = -value2.Z * invNorm;
+    double q2w = value2.W * invNorm;
 
-      //-------------------------------------
-      // Multiply part.
+    //-------------------------------------
+    // Multiply part.
 
-      // cross(av, bv)
-      double cx = q1y * q2z - q1z * q2y;
-      double cy = q1z * q2x - q1x * q2z;
-      double cz = q1x * q2y - q1y * q2x;
+    // cross(av, bv)
+    double cx = q1y * q2z - q1z * q2y;
+    double cy = q1z * q2x - q1x * q2z;
+    double cz = q1x * q2y - q1y * q2x;
 
-      double dot = q1x * q2x + q1y * q2y + q1z * q2z;
+    double dot = q1x * q2x + q1y * q2y + q1z * q2z;
 
-      ans.X = q1x * q2w + q2x * q1w + cx;
-      ans.Y = q1y * q2w + q2y * q1w + cy;
-      ans.Z = q1z * q2w + q2z * q1w + cz;
-      ans.W = q1w * q2w - dot;
+    ans.X = q1x * q2w + q2x * q1w + cx;
+    ans.Y = q1y * q2w + q2y * q1w + cy;
+    ans.Z = q1z * q2w + q2z * q1w + cz;
+    ans.W = q1w * q2w - dot;
 
-      return ans;
-    }
+    return ans;
+  }
 
   /// <summary>
   /// Returns a boolean indicating whether the two given Quaternions are equal.
@@ -721,7 +721,8 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <param name="value1">The first Quaternion to compare.</param>
   /// <param name="value2">The second Quaternion to compare.</param>
   /// <returns>True if the Quaternions are equal; False otherwise.</returns>
-  public static bool operator ==(Quaternion value1, Quaternion value2) => (value1.X == value2.X && value1.Y == value2.Y && value1.Z == value2.Z && value1.W == value2.W);
+  public static bool operator ==(Quaternion value1, Quaternion value2) =>
+    (value1.X == value2.X && value1.Y == value2.Y && value1.Z == value2.Z && value1.W == value2.W);
 
   /// <summary>
   /// Returns a boolean indicating whether the two given Quaternions are not equal.
@@ -729,7 +730,8 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <param name="value1">The first Quaternion to compare.</param>
   /// <param name="value2">The second Quaternion to compare.</param>
   /// <returns>True if the Quaternions are not equal; False if they are equal.</returns>
-  public static bool operator !=(Quaternion value1, Quaternion value2) => (value1.X != value2.X || value1.Y != value2.Y || value1.Z != value2.Z || value1.W != value2.W);
+  public static bool operator !=(Quaternion value1, Quaternion value2) =>
+    (value1.X != value2.X || value1.Y != value2.Y || value1.Z != value2.Z || value1.W != value2.W);
 
   /// <summary>
   /// Returns a boolean indicating whether the given Quaternion is equal to this Quaternion instance.
@@ -745,13 +747,13 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>True if the Object is equal to this Quaternion; False otherwise.</returns>
   public override bool Equals(object? obj)
   {
-      if (obj is Quaternion quaternion)
-      {
-        return Equals(quaternion);
-      }
-
-      return false;
+    if (obj is Quaternion quaternion)
+    {
+      return Equals(quaternion);
     }
+
+    return false;
+  }
 
   /// <summary>
   /// Returns a String representing this Quaternion instance.
@@ -759,17 +761,17 @@ public struct Quaternion : IEquatable<Quaternion>
   /// <returns>The string representation.</returns>
   public override string ToString()
   {
-      CultureInfo ci = CultureInfo.CurrentCulture;
+    CultureInfo ci = CultureInfo.CurrentCulture;
 
-      return String.Format(
-        ci,
-        "{{X:{0} Y:{1} Z:{2} W:{3}}}",
-        X.ToString(ci),
-        Y.ToString(ci),
-        Z.ToString(ci),
-        W.ToString(ci)
-      );
-    }
+    return String.Format(
+      ci,
+      "{{X:{0} Y:{1} Z:{2} W:{3}}}",
+      X.ToString(ci),
+      Y.ToString(ci),
+      Z.ToString(ci),
+      W.ToString(ci)
+    );
+  }
 
   /// <summary>
   /// Returns the hash code for this instance.

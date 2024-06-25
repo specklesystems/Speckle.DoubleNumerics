@@ -529,9 +529,7 @@ public class Matrix4x4Tests
     actual = Matrix4x4.CreateFromAxisAngle(Vector3.UnitZ, radians);
     Assert.True(MathHelper.Equal(expected, actual));
 
-    expected = Matrix4x4.CreateFromQuaternion(
-      Quaternion.CreateFromAxisAngle(Vector3.Normalize(Vector3.One), radians)
-    );
+    expected = Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.Normalize(Vector3.One), radians));
     actual = Matrix4x4.CreateFromAxisAngle(Vector3.Normalize(Vector3.One), radians);
     Assert.True(MathHelper.Equal(expected, actual));
 
@@ -842,8 +840,7 @@ public class Matrix4x4Tests
     Assert.Equal(objectPosition, actual.Translation);
     Assert.True(Vector3.Dot(Vector3.Normalize(objectUpVector), new Vector3(actual.M21, actual.M22, actual.M23)) > 0);
     Assert.True(
-      Vector3.Dot(Vector3.Normalize(objectForwardDirection), new Vector3(-actual.M31, -actual.M32, -actual.M33))
-      > 0.999
+      Vector3.Dot(Vector3.Normalize(objectForwardDirection), new Vector3(-actual.M31, -actual.M32, -actual.M33)) > 0.999
     );
   }
 
@@ -1126,21 +1123,21 @@ public class Matrix4x4Tests
     // all the elements in Actual is NaN
     Assert.True(
       double.IsNaN(actual.M11)
-      && double.IsNaN(actual.M12)
-      && double.IsNaN(actual.M13)
-      && double.IsNaN(actual.M14)
-      && double.IsNaN(actual.M21)
-      && double.IsNaN(actual.M22)
-      && double.IsNaN(actual.M23)
-      && double.IsNaN(actual.M24)
-      && double.IsNaN(actual.M31)
-      && double.IsNaN(actual.M32)
-      && double.IsNaN(actual.M33)
-      && double.IsNaN(actual.M34)
-      && double.IsNaN(actual.M41)
-      && double.IsNaN(actual.M42)
-      && double.IsNaN(actual.M43)
-      && double.IsNaN(actual.M44),
+        && double.IsNaN(actual.M12)
+        && double.IsNaN(actual.M13)
+        && double.IsNaN(actual.M14)
+        && double.IsNaN(actual.M21)
+        && double.IsNaN(actual.M22)
+        && double.IsNaN(actual.M23)
+        && double.IsNaN(actual.M24)
+        && double.IsNaN(actual.M31)
+        && double.IsNaN(actual.M32)
+        && double.IsNaN(actual.M33)
+        && double.IsNaN(actual.M34)
+        && double.IsNaN(actual.M41)
+        && double.IsNaN(actual.M42)
+        && double.IsNaN(actual.M43)
+        && double.IsNaN(actual.M44),
       "Matrix4x4.Invert did not return the expected value."
     );
   }
@@ -1791,12 +1788,7 @@ public class Matrix4x4Tests
     Vector3 cameraPosition = new(3.0, 4.0, 5.0);
     Vector3 objectPosition = cameraPosition + placeDirection * 10.0;
     Matrix4x4 expected = expectedRotation * Matrix4x4.CreateTranslation(objectPosition);
-    Matrix4x4 actual = Matrix4x4.CreateBillboard(
-      objectPosition,
-      cameraPosition,
-      cameraUpVector,
-      new Vector3(0, 0, -1)
-    );
+    Matrix4x4 actual = Matrix4x4.CreateBillboard(objectPosition, cameraPosition, cameraUpVector, new Vector3(0, 0, -1));
     Assert.True(MathHelper.Equal(expected, actual), "Matrix4x4.CreateBillboard did not return the expected value.");
   }
 
@@ -1816,11 +1808,7 @@ public class Matrix4x4Tests
   [Fact]
   public void Matrix4x4CreateBillboardTest02() =>
     // Object placed at Backward of camera. This result must be same as 0 degrees rotate along y-axis.
-    CreateBillboardFact(
-      new Vector3(0, 0, 1),
-      new Vector3(0, 1, 0),
-      Matrix4x4.CreateRotationY(MathHelper.ToRadians(0))
-    );
+    CreateBillboardFact(new Vector3(0, 0, 1), new Vector3(0, 1, 0), Matrix4x4.CreateRotationY(MathHelper.ToRadians(0)));
 
   // A test for CreateBillboard (Vector3, Vector3, Vector3, Vector3?)
   // Place object at Right side of camera on XZ-plane
@@ -1944,12 +1932,7 @@ public class Matrix4x4Tests
     // Doesn't pass camera face direction. CreateBillboard uses new Vector3(0, 0, -1) direction. Result must be same as 180 degrees rotate along y-axis.
     Matrix4x4 expected =
       Matrix4x4.CreateRotationY(MathHelper.ToRadians(180.0)) * Matrix4x4.CreateTranslation(objectPosition);
-    Matrix4x4 actual = Matrix4x4.CreateBillboard(
-      objectPosition,
-      cameraPosition,
-      cameraUpVector,
-      new Vector3(0, 0, 1)
-    );
+    Matrix4x4 actual = Matrix4x4.CreateBillboard(objectPosition, cameraPosition, cameraUpVector, new Vector3(0, 0, 1));
     Assert.True(MathHelper.Equal(expected, actual), "Matrix4x4.CreateBillboard did not return the expected value.");
   }
 
@@ -1965,12 +1948,7 @@ public class Matrix4x4Tests
     // Passes Vector3.Right as camera face direction. Result must be same as -90 degrees rotate along y-axis.
     Matrix4x4 expected =
       Matrix4x4.CreateRotationY(MathHelper.ToRadians(-90.0)) * Matrix4x4.CreateTranslation(objectPosition);
-    Matrix4x4 actual = Matrix4x4.CreateBillboard(
-      objectPosition,
-      cameraPosition,
-      cameraUpVector,
-      new Vector3(1, 0, 0)
-    );
+    Matrix4x4 actual = Matrix4x4.CreateBillboard(objectPosition, cameraPosition, cameraUpVector, new Vector3(1, 0, 0));
     Assert.True(MathHelper.Equal(expected, actual), "Matrix4x4.CreateBillboard did not return the expected value.");
   }
 
@@ -2464,21 +2442,21 @@ public class Matrix4x4Tests
     // Make sure it only modifies expected value of matrix.
     Assert.True(
       a.M11 == b.M11
-      && a.M12 == b.M12
-      && a.M13 == b.M13
-      && a.M14 == b.M14
-      && a.M21 == b.M21
-      && a.M22 == b.M22
-      && a.M23 == b.M23
-      && a.M24 == b.M24
-      && a.M31 == b.M31
-      && a.M32 == b.M32
-      && a.M33 == b.M33
-      && a.M34 == b.M34
-      && a.M41 != b.M41
-      && a.M42 != b.M42
-      && a.M43 != b.M43
-      && a.M44 == b.M44
+        && a.M12 == b.M12
+        && a.M13 == b.M13
+        && a.M14 == b.M14
+        && a.M21 == b.M21
+        && a.M22 == b.M22
+        && a.M23 == b.M23
+        && a.M24 == b.M24
+        && a.M31 == b.M31
+        && a.M32 == b.M32
+        && a.M33 == b.M33
+        && a.M34 == b.M34
+        && a.M41 != b.M41
+        && a.M42 != b.M42
+        && a.M43 != b.M43
+        && a.M44 == b.M44
     );
   }
 

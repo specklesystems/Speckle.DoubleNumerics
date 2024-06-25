@@ -1374,9 +1374,9 @@ public struct Matrix4x4 : IEquatable<Matrix4x4>
     double in_jm = i * n - j * m;
 
     return a * (f * kp_lo - g * jp_ln + h * jo_kn)
-           - b * (e * kp_lo - g * ip_lm + h * io_km)
-           + c * (e * jp_ln - f * ip_lm + h * in_jm)
-           - d * (e * jo_kn - f * io_km + g * in_jm);
+      - b * (e * kp_lo - g * ip_lm + h * io_km)
+      + c * (e * jp_ln - f * ip_lm + h * in_jm)
+      - d * (e * jo_kn - f * io_km + g * in_jm);
   }
 
   /// <summary>
@@ -2021,44 +2021,28 @@ public struct Matrix4x4 : IEquatable<Matrix4x4>
     Matrix4x4 result;
 
     // First row
-    result.M11 =
-      value1.M11 * value2.M11 + value1.M12 * value2.M21 + value1.M13 * value2.M31 + value1.M14 * value2.M41;
-    result.M12 =
-      value1.M11 * value2.M12 + value1.M12 * value2.M22 + value1.M13 * value2.M32 + value1.M14 * value2.M42;
-    result.M13 =
-      value1.M11 * value2.M13 + value1.M12 * value2.M23 + value1.M13 * value2.M33 + value1.M14 * value2.M43;
-    result.M14 =
-      value1.M11 * value2.M14 + value1.M12 * value2.M24 + value1.M13 * value2.M34 + value1.M14 * value2.M44;
+    result.M11 = value1.M11 * value2.M11 + value1.M12 * value2.M21 + value1.M13 * value2.M31 + value1.M14 * value2.M41;
+    result.M12 = value1.M11 * value2.M12 + value1.M12 * value2.M22 + value1.M13 * value2.M32 + value1.M14 * value2.M42;
+    result.M13 = value1.M11 * value2.M13 + value1.M12 * value2.M23 + value1.M13 * value2.M33 + value1.M14 * value2.M43;
+    result.M14 = value1.M11 * value2.M14 + value1.M12 * value2.M24 + value1.M13 * value2.M34 + value1.M14 * value2.M44;
 
     // Second row
-    result.M21 =
-      value1.M21 * value2.M11 + value1.M22 * value2.M21 + value1.M23 * value2.M31 + value1.M24 * value2.M41;
-    result.M22 =
-      value1.M21 * value2.M12 + value1.M22 * value2.M22 + value1.M23 * value2.M32 + value1.M24 * value2.M42;
-    result.M23 =
-      value1.M21 * value2.M13 + value1.M22 * value2.M23 + value1.M23 * value2.M33 + value1.M24 * value2.M43;
-    result.M24 =
-      value1.M21 * value2.M14 + value1.M22 * value2.M24 + value1.M23 * value2.M34 + value1.M24 * value2.M44;
+    result.M21 = value1.M21 * value2.M11 + value1.M22 * value2.M21 + value1.M23 * value2.M31 + value1.M24 * value2.M41;
+    result.M22 = value1.M21 * value2.M12 + value1.M22 * value2.M22 + value1.M23 * value2.M32 + value1.M24 * value2.M42;
+    result.M23 = value1.M21 * value2.M13 + value1.M22 * value2.M23 + value1.M23 * value2.M33 + value1.M24 * value2.M43;
+    result.M24 = value1.M21 * value2.M14 + value1.M22 * value2.M24 + value1.M23 * value2.M34 + value1.M24 * value2.M44;
 
     // Third row
-    result.M31 =
-      value1.M31 * value2.M11 + value1.M32 * value2.M21 + value1.M33 * value2.M31 + value1.M34 * value2.M41;
-    result.M32 =
-      value1.M31 * value2.M12 + value1.M32 * value2.M22 + value1.M33 * value2.M32 + value1.M34 * value2.M42;
-    result.M33 =
-      value1.M31 * value2.M13 + value1.M32 * value2.M23 + value1.M33 * value2.M33 + value1.M34 * value2.M43;
-    result.M34 =
-      value1.M31 * value2.M14 + value1.M32 * value2.M24 + value1.M33 * value2.M34 + value1.M34 * value2.M44;
+    result.M31 = value1.M31 * value2.M11 + value1.M32 * value2.M21 + value1.M33 * value2.M31 + value1.M34 * value2.M41;
+    result.M32 = value1.M31 * value2.M12 + value1.M32 * value2.M22 + value1.M33 * value2.M32 + value1.M34 * value2.M42;
+    result.M33 = value1.M31 * value2.M13 + value1.M32 * value2.M23 + value1.M33 * value2.M33 + value1.M34 * value2.M43;
+    result.M34 = value1.M31 * value2.M14 + value1.M32 * value2.M24 + value1.M33 * value2.M34 + value1.M34 * value2.M44;
 
     // Fourth row
-    result.M41 =
-      value1.M41 * value2.M11 + value1.M42 * value2.M21 + value1.M43 * value2.M31 + value1.M44 * value2.M41;
-    result.M42 =
-      value1.M41 * value2.M12 + value1.M42 * value2.M22 + value1.M43 * value2.M32 + value1.M44 * value2.M42;
-    result.M43 =
-      value1.M41 * value2.M13 + value1.M42 * value2.M23 + value1.M43 * value2.M33 + value1.M44 * value2.M43;
-    result.M44 =
-      value1.M41 * value2.M14 + value1.M42 * value2.M24 + value1.M43 * value2.M34 + value1.M44 * value2.M44;
+    result.M41 = value1.M41 * value2.M11 + value1.M42 * value2.M21 + value1.M43 * value2.M31 + value1.M44 * value2.M41;
+    result.M42 = value1.M41 * value2.M12 + value1.M42 * value2.M22 + value1.M43 * value2.M32 + value1.M44 * value2.M42;
+    result.M43 = value1.M41 * value2.M13 + value1.M42 * value2.M23 + value1.M43 * value2.M33 + value1.M44 * value2.M43;
+    result.M44 = value1.M41 * value2.M14 + value1.M42 * value2.M24 + value1.M43 * value2.M34 + value1.M44 * value2.M44;
 
     return result;
   }
@@ -2255,25 +2239,25 @@ public struct Matrix4x4 : IEquatable<Matrix4x4>
   /// <param name="value2">The second matrix to compare.</param>
   /// <returns>True if the given matrices are equal; False otherwise.</returns>
   public static bool operator ==(Matrix4x4 value1, Matrix4x4 value2) =>
-  (
-    value1.M11 == value2.M11
-    && value1.M22 == value2.M22
-    && value1.M33 == value2.M33
-    && value1.M44 == value2.M44
-    && // Check diagonal element first for early out.
-    value1.M12 == value2.M12
-    && value1.M13 == value2.M13
-    && value1.M14 == value2.M14
-    && value1.M21 == value2.M21
-    && value1.M23 == value2.M23
-    && value1.M24 == value2.M24
-    && value1.M31 == value2.M31
-    && value1.M32 == value2.M32
-    && value1.M34 == value2.M34
-    && value1.M41 == value2.M41
-    && value1.M42 == value2.M42
-    && value1.M43 == value2.M43
-  );
+    (
+      value1.M11 == value2.M11
+      && value1.M22 == value2.M22
+      && value1.M33 == value2.M33
+      && value1.M44 == value2.M44
+      && // Check diagonal element first for early out.
+      value1.M12 == value2.M12
+      && value1.M13 == value2.M13
+      && value1.M14 == value2.M14
+      && value1.M21 == value2.M21
+      && value1.M23 == value2.M23
+      && value1.M24 == value2.M24
+      && value1.M31 == value2.M31
+      && value1.M32 == value2.M32
+      && value1.M34 == value2.M34
+      && value1.M41 == value2.M41
+      && value1.M42 == value2.M42
+      && value1.M43 == value2.M43
+    );
 
   /// <summary>
   /// Returns a boolean indicating whether the given two matrices are not equal.
@@ -2282,24 +2266,24 @@ public struct Matrix4x4 : IEquatable<Matrix4x4>
   /// <param name="value2">The second matrix to compare.</param>
   /// <returns>True if the given matrices are not equal; False if they are equal.</returns>
   public static bool operator !=(Matrix4x4 value1, Matrix4x4 value2) =>
-  (
-    value1.M11 != value2.M11
-    || value1.M12 != value2.M12
-    || value1.M13 != value2.M13
-    || value1.M14 != value2.M14
-    || value1.M21 != value2.M21
-    || value1.M22 != value2.M22
-    || value1.M23 != value2.M23
-    || value1.M24 != value2.M24
-    || value1.M31 != value2.M31
-    || value1.M32 != value2.M32
-    || value1.M33 != value2.M33
-    || value1.M34 != value2.M34
-    || value1.M41 != value2.M41
-    || value1.M42 != value2.M42
-    || value1.M43 != value2.M43
-    || value1.M44 != value2.M44
-  );
+    (
+      value1.M11 != value2.M11
+      || value1.M12 != value2.M12
+      || value1.M13 != value2.M13
+      || value1.M14 != value2.M14
+      || value1.M21 != value2.M21
+      || value1.M22 != value2.M22
+      || value1.M23 != value2.M23
+      || value1.M24 != value2.M24
+      || value1.M31 != value2.M31
+      || value1.M32 != value2.M32
+      || value1.M33 != value2.M33
+      || value1.M34 != value2.M34
+      || value1.M41 != value2.M41
+      || value1.M42 != value2.M42
+      || value1.M43 != value2.M43
+      || value1.M44 != value2.M44
+    );
 
   /// <summary>
   /// Returns a boolean indicating whether this matrix instance is equal to the other given matrix.
@@ -2307,25 +2291,25 @@ public struct Matrix4x4 : IEquatable<Matrix4x4>
   /// <param name="other">The matrix to compare this instance to.</param>
   /// <returns>True if the matrices are equal; False otherwise.</returns>
   public bool Equals(Matrix4x4 other) =>
-  (
-    M11 == other.M11
-    && M22 == other.M22
-    && M33 == other.M33
-    && M44 == other.M44
-    && // Check diagonal element first for early out.
-    M12 == other.M12
-    && M13 == other.M13
-    && M14 == other.M14
-    && M21 == other.M21
-    && M23 == other.M23
-    && M24 == other.M24
-    && M31 == other.M31
-    && M32 == other.M32
-    && M34 == other.M34
-    && M41 == other.M41
-    && M42 == other.M42
-    && M43 == other.M43
-  );
+    (
+      M11 == other.M11
+      && M22 == other.M22
+      && M33 == other.M33
+      && M44 == other.M44
+      && // Check diagonal element first for early out.
+      M12 == other.M12
+      && M13 == other.M13
+      && M14 == other.M14
+      && M21 == other.M21
+      && M23 == other.M23
+      && M24 == other.M24
+      && M31 == other.M31
+      && M32 == other.M32
+      && M34 == other.M34
+      && M41 == other.M41
+      && M42 == other.M42
+      && M43 == other.M43
+    );
 
   /// <summary>
   /// Returns a boolean indicating whether the given Object is equal to this matrix instance.
