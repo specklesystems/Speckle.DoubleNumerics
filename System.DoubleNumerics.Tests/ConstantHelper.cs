@@ -16,7 +16,7 @@ namespace System.DoubleNumerics
             {
                 unchecked
                 {
-                    *((Byte*)&value) = (Byte)0xff;
+                    *&value = 0xff;
                 }
             }
             return value;
@@ -29,7 +29,7 @@ namespace System.DoubleNumerics
             {
                 unchecked
                 {
-                    *((SByte*)&value) = (SByte)0xff;
+                    *&value = (SByte)0xff;
                 }
             }
             return value;
@@ -42,7 +42,7 @@ namespace System.DoubleNumerics
             {
                 unchecked
                 {
-                    *((UInt16*)&value) = (UInt16)0xffff;
+                    *&value = 0xffff;
                 }
             }
             return value;
@@ -55,7 +55,7 @@ namespace System.DoubleNumerics
             {
                 unchecked
                 {
-                    *((Int16*)&value) = (Int16)0xffff;
+                    *&value = (Int16)0xffff;
                 }
             }
             return value;
@@ -68,7 +68,7 @@ namespace System.DoubleNumerics
             {
                 unchecked
                 {
-                    *((UInt32*)&value) = (UInt32)0xffffffff;
+                    *&value = 0xffffffff;
                 }
             }
             return value;
@@ -81,7 +81,7 @@ namespace System.DoubleNumerics
             {
                 unchecked
                 {
-                    *((Int32*)&value) = (Int32)0xffffffff;
+                    *&value = (Int32)0xffffffff;
                 }
             }
             return value;
@@ -94,7 +94,7 @@ namespace System.DoubleNumerics
             {
                 unchecked
                 {
-                    *((UInt64*)&value) = (UInt64)0xffffffffffffffff;
+                    *&value = 0xffffffffffffffff;
                 }
             }
             return value;
@@ -107,7 +107,7 @@ namespace System.DoubleNumerics
             {
                 unchecked
                 {
-                    *((Int64*)&value) = (Int64)0xffffffffffffffff;
+                    *&value = (Int64)0xffffffffffffffff;
                 }
             }
             return value;
@@ -133,7 +133,7 @@ namespace System.DoubleNumerics
             {
                 unchecked
                 {
-                    *((Single*)&value) = (Single)0xffffffff;
+                    *&value = 0xffffffff;
                 }
             }
             return value;

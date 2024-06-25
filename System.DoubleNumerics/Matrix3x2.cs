@@ -39,8 +39,7 @@ namespace System.DoubleNumerics
         public double M32;
         #endregion Public Fields
 
-        private static readonly Matrix3x2 _identity = new Matrix3x2
-        (
+        private static readonly Matrix3x2 _identity = new(
             1, 0,
             0, 1,
             0, 0
@@ -92,12 +91,12 @@ namespace System.DoubleNumerics
                          double m21, double m22,
                          double m31, double m32)
         {
-            this.M11 = m11;
-            this.M12 = m12;
-            this.M21 = m21;
-            this.M22 = m22;
-            this.M31 = m31;
-            this.M32 = m32;
+            M11 = m11;
+            M12 = m12;
+            M21 = m21;
+            M22 = m22;
+            M31 = m31;
+            M32 = m32;
         }
 
         /// <summary>
@@ -289,8 +288,8 @@ namespace System.DoubleNumerics
         {
             Matrix3x2 result;
 
-            double xTan = (double)Math.Tan(radiansX);
-            double yTan = (double)Math.Tan(radiansY);
+            double xTan = Math.Tan(radiansX);
+            double yTan = Math.Tan(radiansY);
 
             result.M11 = 1.0;
             result.M12 = yTan;
@@ -313,8 +312,8 @@ namespace System.DoubleNumerics
         {
             Matrix3x2 result;
 
-            double xTan = (double)Math.Tan(radiansX);
-            double yTan = (double)Math.Tan(radiansY);
+            double xTan = Math.Tan(radiansX);
+            double yTan = Math.Tan(radiansY);
 
             double tx = -centerPoint.Y * xTan;
             double ty = -centerPoint.X * yTan;
@@ -338,11 +337,11 @@ namespace System.DoubleNumerics
         {
             Matrix3x2 result;
 
-            radians = (double)Math.IEEERemainder(radians, Math.PI * 2);
+            radians = Math.IEEERemainder(radians, Math.PI * 2);
 
             double c, s;
 
-            const double epsilon = 0.001 * (double)Math.PI / 180;     // 0.1% of a degree
+            const double epsilon = 0.001 * Math.PI / 180;     // 0.1% of a degree
 
             if (radians > -epsilon && radians < epsilon)
             {
@@ -371,8 +370,8 @@ namespace System.DoubleNumerics
             else
             {
                 // Arbitrary rotation.
-                c = (double)Math.Cos(radians);
-                s = (double)Math.Sin(radians);
+                c = Math.Cos(radians);
+                s = Math.Sin(radians);
             }
 
             // [  c  s ]
@@ -398,11 +397,11 @@ namespace System.DoubleNumerics
         {
             Matrix3x2 result;
 
-            radians = (double)Math.IEEERemainder(radians, Math.PI * 2);
+            radians = Math.IEEERemainder(radians, Math.PI * 2);
 
             double c, s;
 
-            const double epsilon = 0.001 * (double)Math.PI / 180;     // 0.1% of a degree
+            const double epsilon = 0.001 * Math.PI / 180;     // 0.1% of a degree
 
             if (radians > -epsilon && radians < epsilon)
             {
@@ -431,8 +430,8 @@ namespace System.DoubleNumerics
             else
             {
                 // Arbitrary rotation.
-                c = (double)Math.Cos(radians);
-                s = (double)Math.Sin(radians);
+                c = Math.Cos(radians);
+                s = Math.Sin(radians);
             }
 
             double x = centerPoint.X * (1 - c) + centerPoint.Y * s;
@@ -784,11 +783,11 @@ namespace System.DoubleNumerics
         /// </summary>
         /// <param name="obj">The Object to compare against.</param>
         /// <returns>True if the Object is equal to this matrix; False otherwise.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (obj is Matrix3x2)
+            if (obj is Matrix3x2 x2)
             {
-                return Equals((Matrix3x2)obj);
+                return Equals(x2);
             }
 
             return false;

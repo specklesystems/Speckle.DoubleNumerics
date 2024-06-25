@@ -13,9 +13,4 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Update="ConstantHelper.cs">
-      <DependentUpon>Matrix4x4.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
 </Project>

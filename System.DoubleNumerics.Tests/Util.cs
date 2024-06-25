@@ -24,7 +24,7 @@ namespace System.DoubleNumerics.Tests
             double[] values = new double[numValues];
             for (int g = 0; g < numValues; g++)
             {
-                values[g] = (double)(s_random.NextDouble() * 99 + 1);
+                values[g] = s_random.NextDouble() * 99 + 1;
             }
             return values;
         }
@@ -100,7 +100,7 @@ namespace System.DoubleNumerics.Tests
                 return value;
             }
 
-            dynamic dyn = (dynamic)value;
+            dynamic dyn = value;
             var abs = Math.Abs(dyn);
             T ret = (T)abs;
             return ret;

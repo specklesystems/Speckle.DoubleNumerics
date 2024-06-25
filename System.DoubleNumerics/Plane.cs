@@ -31,7 +31,7 @@ namespace System.DoubleNumerics
         public Plane(double x, double y, double z, double d)
         {
             Normal = new Vector3(x, y, z);
-            this.D = d;
+            D = d;
         }
 
         /// <summary>
@@ -41,8 +41,8 @@ namespace System.DoubleNumerics
         /// <param name="d">The Plane's distance from the origin along its normal vector.</param>
         public Plane(Vector3 normal, double d)
         {
-            this.Normal = normal;
-            this.D = d;
+            Normal = normal;
+            D = d;
         }
 
         /// <summary>
@@ -81,9 +81,9 @@ namespace System.DoubleNumerics
 
                 // Normalize(N)
                 double ls = nx * nx + ny * ny + nz * nz;
-                double invNorm = 1.0 / (double)Math.Sqrt((double)ls);
+                double invNorm = 1.0 / Math.Sqrt(ls);
 
-                Vector3 normal = new Vector3(
+                Vector3 normal = new(
                     nx * invNorm,
                     ny * invNorm,
                     nz * invNorm);
@@ -109,7 +109,7 @@ namespace System.DoubleNumerics
                     return value; // It already normalized, so we don't need to further process.
                 }
 
-                double fInv = 1.0 / (double)Math.Sqrt(f);
+                double fInv = 1.0 / Math.Sqrt(f);
 
                 return new Plane(
                     value.Normal.X * fInv,
@@ -280,11 +280,11 @@ namespace System.DoubleNumerics
         /// <param name="obj">The Object to compare against.</param>
         /// <returns>True if the Object is equal to this Plane; False otherwise.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (obj is Plane)
+            if (obj is Plane plane)
             {
-                return Equals((Plane)obj);
+                return Equals(plane);
             }
 
             return false;

@@ -45,7 +45,7 @@ namespace System.Numerics.Performance.Tests.Common.System
         /// <param name="index">An optional index value to use as a suffix on the file name.  Typically a loop index.</param>
         /// <param name="memberName">The member name of the function calling this method.</param>
         /// <param name="lineNumber">The line number of the function calling this method.</param>
-        public string GetTestFilePath(int? index = null, [CallerMemberName] string memberName = null, [CallerLineNumber] int lineNumber = 0)
+        public string GetTestFilePath(int? index = null, [CallerMemberName] string? memberName = null, [CallerLineNumber] int lineNumber = 0)
         {
             return Path.Combine(Path.GetTempPath(), string.Format(
                 index.HasValue ? "{0}_{1}_{2}_{3}" : "{0}_{1}_{2}",

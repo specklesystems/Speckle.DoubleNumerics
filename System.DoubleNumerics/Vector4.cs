@@ -48,10 +48,10 @@ namespace System.DoubleNumerics
         /// <returns>The hash code.</returns>
         public override int GetHashCode()
         {
-            int hash = this.X.GetHashCode();
-            hash = HashHelpers.Combine(hash, this.Y.GetHashCode());
-            hash = HashHelpers.Combine(hash, this.Z.GetHashCode());
-            hash = HashHelpers.Combine(hash, this.W.GetHashCode());
+            int hash = X.GetHashCode();
+            hash = HashHelpers.Combine(hash, Y.GetHashCode());
+            hash = HashHelpers.Combine(hash, Z.GetHashCode());
+            hash = HashHelpers.Combine(hash, W.GetHashCode());
             return hash;
         }
 
@@ -61,11 +61,11 @@ namespace System.DoubleNumerics
         /// <param name="obj">The Object to compare against.</param>
         /// <returns>True if the Object is equal to this Vector4; False otherwise.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is Vector4))
+            if (!(obj is Vector4 vector4))
                 return false;
-            return Equals((Vector4)obj);
+            return Equals(vector4);
         }
 
         /// <summary>
@@ -94,21 +94,21 @@ namespace System.DoubleNumerics
         /// <param name="format">The format of individual elements.</param>
         /// <param name="formatProvider">The format provider to use when formatting elements.</param>
         /// <returns>The string representation.</returns>
-        public string ToString(string format, IFormatProvider formatProvider)
+        public string ToString(string? format, IFormatProvider? formatProvider)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;
             sb.Append('<');
-            sb.Append(this.X.ToString(format, formatProvider));
+            sb.Append(X.ToString(format, formatProvider));
             sb.Append(separator);
             sb.Append(' ');
-            sb.Append(this.Y.ToString(format, formatProvider));
+            sb.Append(Y.ToString(format, formatProvider));
             sb.Append(separator);
             sb.Append(' ');
-            sb.Append(this.Z.ToString(format, formatProvider));
+            sb.Append(Z.ToString(format, formatProvider));
             sb.Append(separator);
             sb.Append(' ');
-            sb.Append(this.W.ToString(format, formatProvider));
+            sb.Append(W.ToString(format, formatProvider));
             sb.Append('>');
             return sb.ToString();
         }
@@ -122,7 +122,7 @@ namespace System.DoubleNumerics
         {
             double ls = X * X + Y * Y + Z * Z + W * W;
 
-                return (double)Math.Sqrt((double)ls);
+                return Math.Sqrt(ls);
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace System.DoubleNumerics
 
                 double ls = dx * dx + dy * dy + dz * dz + dw * dw;
 
-                return (double)Math.Sqrt((double)ls);
+                return Math.Sqrt(ls);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace System.DoubleNumerics
         public static Vector4 Normalize(Vector4 vector)
         {
             double ls = vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z + vector.W * vector.W;
-                double invNorm = 1.0 / (double)Math.Sqrt((double)ls);
+                double invNorm = 1.0 / Math.Sqrt(ls);
 
                 return new Vector4(
                     vector.X * invNorm,

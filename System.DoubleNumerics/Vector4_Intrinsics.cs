@@ -101,7 +101,7 @@ namespace System.DoubleNumerics
         /// <exception cref="ArgumentOutOfRangeException">If index is greater than end of the array or index is less than zero.</exception>
         /// <exception cref="ArgumentException">If number of elements in source vector is greater than those available in destination array.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void CopyTo(Double[] array, int index)
+        public void CopyTo(Double[]? array, int index)
         {
             if (array == null)
             {
@@ -129,10 +129,10 @@ namespace System.DoubleNumerics
         /// <returns>True if the other Vector4 is equal to this instance; False otherwise.</returns>
         public bool Equals(Vector4 other)
         {
-            return this.X == other.X
-                && this.Y == other.Y
-                && this.Z == other.Z
-                && this.W == other.W;
+            return X == other.X
+                && Y == other.Y
+                && Z == other.Z
+                && W == other.W;
         }
         #endregion Public Instance Methods
 
@@ -203,7 +203,7 @@ namespace System.DoubleNumerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector4 SquareRoot(Vector4 value)
         {
-            return new Vector4((Double)Math.Sqrt(value.X), (Double)Math.Sqrt(value.Y), (Double)Math.Sqrt(value.Z), (Double)Math.Sqrt(value.W));
+            return new Vector4(Math.Sqrt(value.X), Math.Sqrt(value.Y), Math.Sqrt(value.Z), Math.Sqrt(value.W));
         }
         #endregion Public Static Methods
 

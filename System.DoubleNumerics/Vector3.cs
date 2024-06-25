@@ -45,9 +45,9 @@ namespace System.DoubleNumerics
         /// <returns>The hash code.</returns>
         public override int GetHashCode()
         {
-            int hash = this.X.GetHashCode();
-            hash = HashHelpers.Combine(hash, this.Y.GetHashCode());
-            hash = HashHelpers.Combine(hash, this.Z.GetHashCode());
+            int hash = X.GetHashCode();
+            hash = HashHelpers.Combine(hash, Y.GetHashCode());
+            hash = HashHelpers.Combine(hash, Z.GetHashCode());
             return hash;
         }
 
@@ -57,11 +57,11 @@ namespace System.DoubleNumerics
         /// <param name="obj">The Object to compare against.</param>
         /// <returns>True if the Object is equal to this Vector3; False otherwise.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is Vector3))
+            if (!(obj is Vector3 vector3))
                 return false;
-            return Equals((Vector3)obj);
+            return Equals(vector3);
         }
 
         /// <summary>
@@ -90,18 +90,18 @@ namespace System.DoubleNumerics
         /// <param name="format">The format of individual elements.</param>
         /// <param name="formatProvider">The format provider to use when formatting elements.</param>
         /// <returns>The string representation.</returns>
-        public string ToString(string format, IFormatProvider formatProvider)
+        public string ToString(string? format, IFormatProvider? formatProvider)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;
             sb.Append('<');
-            sb.Append(((IFormattable)this.X).ToString(format, formatProvider));
+            sb.Append(X.ToString(format, formatProvider));
             sb.Append(separator);
             sb.Append(' ');
-            sb.Append(((IFormattable)this.Y).ToString(format, formatProvider));
+            sb.Append(Y.ToString(format, formatProvider));
             sb.Append(separator);
             sb.Append(' ');
-            sb.Append(((IFormattable)this.Z).ToString(format, formatProvider));
+            sb.Append(Z.ToString(format, formatProvider));
             sb.Append('>');
             return sb.ToString();
         }
@@ -114,7 +114,7 @@ namespace System.DoubleNumerics
         public double Length()
         {
             double ls = X * X + Y * Y + Z * Z;
-                return (double)global::System.Math.Sqrt(ls);
+                return Math.Sqrt(ls);
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace System.DoubleNumerics
 
                 double ls = dx * dx + dy * dy + dz * dz;
 
-                return (double)global::System.Math.Sqrt((double)ls);
+                return Math.Sqrt(ls);
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace System.DoubleNumerics
         public static Vector3 Normalize(Vector3 value)
         {
             double ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z;
-                double length = (double)global::System.Math.Sqrt(ls);
+                double length = Math.Sqrt(ls);
                 return new Vector3(value.X / length, value.Y / length, value.Z / length);
         }
 

@@ -82,8 +82,7 @@ namespace System.DoubleNumerics
         public double M44;
         #endregion Public Fields
 
-        private static readonly Matrix4x4 _identity = new Matrix4x4
-        (
+        private static readonly Matrix4x4 _identity = new(
             1, 0, 0, 0,
             0, 1, 0, 0,
             0, 0, 1, 0,
@@ -138,25 +137,25 @@ namespace System.DoubleNumerics
                          double m31, double m32, double m33, double m34,
                          double m41, double m42, double m43, double m44)
         {
-            this.M11 = m11;
-            this.M12 = m12;
-            this.M13 = m13;
-            this.M14 = m14;
+            M11 = m11;
+            M12 = m12;
+            M13 = m13;
+            M14 = m14;
 
-            this.M21 = m21;
-            this.M22 = m22;
-            this.M23 = m23;
-            this.M24 = m24;
+            M21 = m21;
+            M22 = m22;
+            M23 = m23;
+            M24 = m24;
 
-            this.M31 = m31;
-            this.M32 = m32;
-            this.M33 = m33;
-            this.M34 = m34;
+            M31 = m31;
+            M32 = m32;
+            M33 = m33;
+            M34 = m34;
 
-            this.M41 = m41;
-            this.M42 = m42;
-            this.M43 = m43;
-            this.M44 = m44;
+            M41 = m41;
+            M42 = m42;
+            M43 = m43;
+            M44 = m44;
         }
 
         /// <summary>
@@ -195,7 +194,7 @@ namespace System.DoubleNumerics
         {
             const double epsilon = 1e-4;
 
-            Vector3 zaxis = new Vector3(
+            Vector3 zaxis = new(
                 objectPosition.X - cameraPosition.X,
                 objectPosition.Y - cameraPosition.Y,
                 objectPosition.Z - cameraPosition.Z);
@@ -208,7 +207,7 @@ namespace System.DoubleNumerics
             }
             else
             {
-                zaxis = Vector3.Multiply(zaxis, 1.0 / (double)Math.Sqrt(norm));
+                zaxis = Vector3.Multiply(zaxis, 1.0 / Math.Sqrt(norm));
             }
 
             Vector3 xaxis = Vector3.Normalize(Vector3.Cross(cameraUpVector, zaxis));
@@ -250,10 +249,10 @@ namespace System.DoubleNumerics
         public static Matrix4x4 CreateConstrainedBillboard(Vector3 objectPosition, Vector3 cameraPosition, Vector3 rotateAxis, Vector3 cameraForwardVector, Vector3 objectForwardVector)
         {
             const double epsilon = 1e-4;
-            const double minAngle = 1.0 - (0.1 * ((double)Math.PI / 180.0)); // 0.1 degrees
+            const double minAngle = 1.0 - (0.1 * (Math.PI / 180.0)); // 0.1 degrees
 
             // Treat the case when object and camera positions are too close.
-            Vector3 faceDir = new Vector3(
+            Vector3 faceDir = new(
                 objectPosition.X - cameraPosition.X,
                 objectPosition.Y - cameraPosition.Y,
                 objectPosition.Z - cameraPosition.Z);
@@ -266,7 +265,7 @@ namespace System.DoubleNumerics
             }
             else
             {
-                faceDir = Vector3.Multiply(faceDir, (1.0 / (double)Math.Sqrt(norm)));
+                faceDir = Vector3.Multiply(faceDir, (1.0 / Math.Sqrt(norm)));
             }
 
             Vector3 yaxis = rotateAxis;
@@ -584,8 +583,8 @@ namespace System.DoubleNumerics
         {
             Matrix4x4 result;
 
-            double c = (double)Math.Cos(radians);
-            double s = (double)Math.Sin(radians);
+            double c = Math.Cos(radians);
+            double s = Math.Sin(radians);
 
             // [  1  0  0  0 ]
             // [  0  c  s  0 ]
@@ -621,8 +620,8 @@ namespace System.DoubleNumerics
         {
             Matrix4x4 result;
 
-            double c = (double)Math.Cos(radians);
-            double s = (double)Math.Sin(radians);
+            double c = Math.Cos(radians);
+            double s = Math.Sin(radians);
 
             double y = centerPoint.Y * (1 - c) + centerPoint.Z * s;
             double z = centerPoint.Z * (1 - c) - centerPoint.Y * s;
@@ -660,8 +659,8 @@ namespace System.DoubleNumerics
         {
             Matrix4x4 result;
 
-            double c = (double)Math.Cos(radians);
-            double s = (double)Math.Sin(radians);
+            double c = Math.Cos(radians);
+            double s = Math.Sin(radians);
 
             // [  c  0 -s  0 ]
             // [  0  1  0  0 ]
@@ -697,8 +696,8 @@ namespace System.DoubleNumerics
         {
             Matrix4x4 result;
 
-            double c = (double)Math.Cos(radians);
-            double s = (double)Math.Sin(radians);
+            double c = Math.Cos(radians);
+            double s = Math.Sin(radians);
 
             double x = centerPoint.X * (1 - c) - centerPoint.Z * s;
             double z = centerPoint.Z * (1 - c) + centerPoint.X * s;
@@ -736,8 +735,8 @@ namespace System.DoubleNumerics
         {
             Matrix4x4 result;
 
-            double c = (double)Math.Cos(radians);
-            double s = (double)Math.Sin(radians);
+            double c = Math.Cos(radians);
+            double s = Math.Sin(radians);
 
             // [  c  s  0  0 ]
             // [ -s  c  0  0 ]
@@ -773,8 +772,8 @@ namespace System.DoubleNumerics
         {
             Matrix4x4 result;
 
-            double c = (double)Math.Cos(radians);
-            double s = (double)Math.Sin(radians);
+            double c = Math.Cos(radians);
+            double s = Math.Sin(radians);
 
             double x = centerPoint.X * (1 - c) + centerPoint.Y * s;
             double y = centerPoint.Y * (1 - c) - centerPoint.X * s;
@@ -837,7 +836,7 @@ namespace System.DoubleNumerics
             //     [ zx-cosa*zx-sina*y zy-cosa*zy+sina*x   zz+cosa*(1-zz)  ]
             //
             double x = axis.X, y = axis.Y, z = axis.Z;
-            double sa = (double)Math.Sin(angle), ca = (double)Math.Cos(angle);
+            double sa = Math.Sin(angle), ca = Math.Cos(angle);
             double xx = x * x, yy = y * y, zz = z * z;
             double xy = x * y, xz = x * z, yz = y * z;
 
@@ -885,7 +884,7 @@ namespace System.DoubleNumerics
             if (nearPlaneDistance >= farPlaneDistance)
                 throw new ArgumentOutOfRangeException(nameof(nearPlaneDistance));
 
-            double yScale = 1.0 / (double)Math.Tan(fieldOfView * 0.5);
+            double yScale = 1.0 / Math.Tan(fieldOfView * 0.5);
             double xScale = yScale / aspectRatio;
 
             Matrix4x4 result;
@@ -1163,7 +1162,7 @@ namespace System.DoubleNumerics
         {
             Quaternion q = Quaternion.CreateFromYawPitchRoll(yaw, pitch, roll);
 
-            return Matrix4x4.CreateFromQuaternion(q);
+            return CreateFromQuaternion(q);
         }
 
         /// <summary>
@@ -1507,8 +1506,8 @@ namespace System.DoubleNumerics
                     VectorBasis vectorBasis;
                     Vector3** pVectorBasis = (Vector3**)&vectorBasis;
 
-                    Matrix4x4 matTemp = Matrix4x4.Identity;
-                    CanonicalBasis canonicalBasis = new CanonicalBasis();
+                    Matrix4x4 matTemp = Identity;
+                    CanonicalBasis canonicalBasis = new();
                     Vector3* pCanonicalBasis = &canonicalBasis.Row0;
 
                     canonicalBasis.Row0 = new Vector3(1.0, 0.0, 0.0);
@@ -1597,9 +1596,9 @@ namespace System.DoubleNumerics
                         uint cc;
                         double fAbsX, fAbsY, fAbsZ;
 
-                        fAbsX = (double)Math.Abs(pVectorBasis[a]->X);
-                        fAbsY = (double)Math.Abs(pVectorBasis[a]->Y);
-                        fAbsZ = (double)Math.Abs(pVectorBasis[a]->Z);
+                        fAbsX = Math.Abs(pVectorBasis[a]->X);
+                        fAbsY = Math.Abs(pVectorBasis[a]->Y);
+                        fAbsZ = Math.Abs(pVectorBasis[a]->Z);
 
                         #region Ranking
                         if (fAbsX < fAbsY)
@@ -2174,11 +2173,11 @@ namespace System.DoubleNumerics
         /// </summary>
         /// <param name="obj">The Object to compare against.</param>
         /// <returns>True if the Object is equal to this matrix; False otherwise.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (obj is Matrix4x4)
+            if (obj is Matrix4x4 x4)
             {
-                return Equals((Matrix4x4)obj);
+                return Equals(x4);
             }
 
             return false;

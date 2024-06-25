@@ -54,10 +54,10 @@ namespace System.DoubleNumerics
         /// <param name="w">The W component of the Quaternion.</param>
         public Quaternion(double x, double y, double z, double w)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
-            this.W = w;
+            X = x;
+            Y = y;
+            Z = z;
+            W = w;
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace System.DoubleNumerics
         {
             double ls = X * X + Y * Y + Z * Z + W * W;
 
-            return (double)Math.Sqrt((double)ls);
+            return Math.Sqrt(ls);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace System.DoubleNumerics
 
             double ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W;
 
-            double invNorm = 1.0 / (double)Math.Sqrt((double)ls);
+            double invNorm = 1.0 / Math.Sqrt(ls);
 
             ans.X = value.X * invNorm;
             ans.Y = value.Y * invNorm;
@@ -167,8 +167,8 @@ namespace System.DoubleNumerics
             Quaternion ans;
 
             double halfAngle = angle * 0.5;
-            double s = (double)Math.Sin(halfAngle);
-            double c = (double)Math.Cos(halfAngle);
+            double s = Math.Sin(halfAngle);
+            double c = Math.Cos(halfAngle);
 
             ans.X = axis.X * s;
             ans.Y = axis.Y * s;
@@ -192,16 +192,16 @@ namespace System.DoubleNumerics
             double sr, cr, sp, cp, sy, cy;
 
             double halfRoll = roll * 0.5;
-            sr = (double)Math.Sin(halfRoll);
-            cr = (double)Math.Cos(halfRoll);
+            sr = Math.Sin(halfRoll);
+            cr = Math.Cos(halfRoll);
 
             double halfPitch = pitch * 0.5;
-            sp = (double)Math.Sin(halfPitch);
-            cp = (double)Math.Cos(halfPitch);
+            sp = Math.Sin(halfPitch);
+            cp = Math.Cos(halfPitch);
 
             double halfYaw = yaw * 0.5;
-            sy = (double)Math.Sin(halfYaw);
-            cy = (double)Math.Cos(halfYaw);
+            sy = Math.Sin(halfYaw);
+            cy = Math.Cos(halfYaw);
 
             Quaternion result;
 
@@ -222,11 +222,11 @@ namespace System.DoubleNumerics
         {
             double trace = matrix.M11 + matrix.M22 + matrix.M33;
 
-            Quaternion q = new Quaternion();
+            Quaternion q = new();
 
             if (trace > 0.0)
             {
-                double s = (double)Math.Sqrt(trace + 1.0);
+                double s = Math.Sqrt(trace + 1.0);
                 q.W = s * 0.5;
                 s = 0.5 / s;
                 q.X = (matrix.M23 - matrix.M32) * s;
@@ -237,7 +237,7 @@ namespace System.DoubleNumerics
             {
                 if (matrix.M11 >= matrix.M22 && matrix.M11 >= matrix.M33)
                 {
-                    double s = (double)Math.Sqrt(1.0 + matrix.M11 - matrix.M22 - matrix.M33);
+                    double s = Math.Sqrt(1.0 + matrix.M11 - matrix.M22 - matrix.M33);
                     double invS = 0.5 / s;
                     q.X = 0.5 * s;
                     q.Y = (matrix.M12 + matrix.M21) * invS;
@@ -246,7 +246,7 @@ namespace System.DoubleNumerics
                 }
                 else if (matrix.M22 > matrix.M33)
                 {
-                    double s = (double)Math.Sqrt(1.0 + matrix.M22 - matrix.M11 - matrix.M33);
+                    double s = Math.Sqrt(1.0 + matrix.M22 - matrix.M11 - matrix.M33);
                     double invS = 0.5 / s;
                     q.X = (matrix.M21 + matrix.M12) * invS;
                     q.Y = 0.5 * s;
@@ -255,7 +255,7 @@ namespace System.DoubleNumerics
                 }
                 else
                 {
-                    double s = (double)Math.Sqrt(1.0 + matrix.M33 - matrix.M11 - matrix.M22);
+                    double s = Math.Sqrt(1.0 + matrix.M33 - matrix.M11 - matrix.M22);
                     double invS = 0.5 / s;
                     q.X = (matrix.M31 + matrix.M13) * invS;
                     q.Y = (matrix.M32 + matrix.M23) * invS;
@@ -315,13 +315,13 @@ namespace System.DoubleNumerics
             }
             else
             {
-                double omega = (double)Math.Acos(cosOmega);
-                double invSinOmega = (double)(1 / Math.Sin(omega));
+                double omega = Math.Acos(cosOmega);
+                double invSinOmega = 1 / Math.Sin(omega);
 
-                s1 = (double)Math.Sin((1.0 - t) * omega) * invSinOmega;
+                s1 = Math.Sin((1.0 - t) * omega) * invSinOmega;
                 s2 = (flip)
-                    ? (double)-Math.Sin(t * omega) * invSinOmega
-                    : (double)Math.Sin(t * omega) * invSinOmega;
+                    ? -Math.Sin(t * omega) * invSinOmega
+                    : Math.Sin(t * omega) * invSinOmega;
             }
 
             Quaternion ans;
@@ -346,7 +346,7 @@ namespace System.DoubleNumerics
             double t = amount;
             double t1 = 1.0 - t;
 
-            Quaternion r = new Quaternion();
+            Quaternion r = new();
 
             double dot = quaternion1.X * quaternion2.X + quaternion1.Y * quaternion2.Y +
                         quaternion1.Z * quaternion2.Z + quaternion1.W * quaternion2.W;
@@ -368,7 +368,7 @@ namespace System.DoubleNumerics
 
             // Normalize it.
             double ls = r.X * r.X + r.Y * r.Y + r.Z * r.Z + r.W * r.W;
-            double invNorm = 1.0 / (double)Math.Sqrt((double)ls);
+            double invNorm = 1.0 / Math.Sqrt(ls);
 
             r.X *= invNorm;
             r.Y *= invNorm;
@@ -761,11 +761,11 @@ namespace System.DoubleNumerics
         /// </summary>
         /// <param name="obj">The Object to compare against.</param>
         /// <returns>True if the Object is equal to this Quaternion; False otherwise.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (obj is Quaternion)
+            if (obj is Quaternion quaternion)
             {
-                return Equals((Quaternion)obj);
+                return Equals(quaternion);
             }
 
             return false;

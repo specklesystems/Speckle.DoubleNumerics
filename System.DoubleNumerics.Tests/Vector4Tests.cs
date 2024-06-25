@@ -181,7 +181,7 @@ namespace System.DoubleNumerics.Tests
 
             Vector4 target = new Vector4(a, w);
 
-            double expected = (double)Math.Sqrt(30.0);
+            double expected = Math.Sqrt(30.0);
             double actual;
 
             actual = target.Length();
@@ -1103,7 +1103,7 @@ namespace System.DoubleNumerics.Tests
             Vector4 b = new Vector4(1.0, 2.0, 3.0, 4.0);
 
             // case 1: compare between same values
-            object obj = b;
+            object? obj = b;
 
             bool expected = true;
             bool actual = a.Equals(obj);

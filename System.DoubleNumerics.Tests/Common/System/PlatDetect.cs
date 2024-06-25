@@ -17,7 +17,7 @@ namespace System.DoubleNumerics.Tests.Common.System
         public static bool IsOSX { get; } = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
         public static bool IsNetBSD { get; } = RuntimeInformation.IsOSPlatform(OSPlatform.Create("NETBSD"));
         public static bool IsNotWindowsNanoServer { get; } = (IsWindows &&
-            File.Exists(Path.Combine(Environment.GetEnvironmentVariable("windir"), "regedit.exe")));
+            File.Exists(Path.Combine(Environment.GetEnvironmentVariable("windir") ?? throw new NotSupportedException(), "regedit.exe")));
         public static bool IsWindows10Version1607OrGreater { get; } = IsWindows &&
             GetWindowsVersion() == 10 && GetWindowsMinorVersion() == 0 && GetWindowsBuildNumber() >= 14393;
 
@@ -163,7 +163,7 @@ namespace System.DoubleNumerics.Tests.Common.System
         }
 
         [DllImport("libc", SetLastError = true)]
-        private static extern int sysctlbyname(string ctlName, byte[] oldp, ref IntPtr oldpLen, byte[] newp, IntPtr newpLen);
+        private static extern int sysctlbyname(string ctlName, byte[] oldp, ref IntPtr oldpLen, byte[]? newp, IntPtr newpLen);
 
         [DllImport("ntdll.dll")]
         private static extern int RtlGetVersion(out RTL_OSVERSIONINFOEX lpVersionInformation);

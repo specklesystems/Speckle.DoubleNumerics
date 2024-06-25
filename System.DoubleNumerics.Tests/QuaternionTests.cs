@@ -307,7 +307,7 @@ namespace System.DoubleNumerics.Tests
             Vector3 axis = new Vector3();
             double angle = MathHelper.ToRadians(-30.0);
 
-            double cos = (double)Math.Cos(angle / 2.0);
+            double cos = Math.Cos(angle / 2.0);
             Quaternion actual = Quaternion.CreateFromAxisAngle(axis, angle);
 
             Assert.True(actual.X == 0.0 && actual.Y == 0.0 && actual.Z == 0.0 && MathHelper.Equal(cos, actual.W)
@@ -383,7 +383,8 @@ namespace System.DoubleNumerics.Tests
 
                         Quaternion expected = yaw * pitch * roll;
                         Quaternion actual = Quaternion.CreateFromYawPitchRoll(yawRad, pitchRad, rollRad);
-                        Assert.True(MathHelper.Equal(expected, actual), String.Format("Yaw:{0} Pitch:{1} Roll:{2}", yawAngle, pitchAngle, rollAngle));
+                        Assert.True(MathHelper.Equal(expected, actual),
+                          $"Yaw:{yawAngle} Pitch:{pitchAngle} Roll:{rollAngle}");
                     }
                 }
             }
@@ -568,7 +569,7 @@ namespace System.DoubleNumerics.Tests
             Quaternion b = new Quaternion(1.0, 2.0, 3.0, 4.0);
 
             // case 1: compare between same values
-            object obj = b;
+            object? obj = b;
 
             bool expected = true;
             bool actual = a.Equals(obj);
@@ -749,14 +750,12 @@ namespace System.DoubleNumerics.Tests
                 Quaternion expected = Quaternion.CreateFromAxisAngle(Vector3.UnitY, angle);
                 Quaternion actual = Quaternion.CreateFromRotationMatrix(matrix);
                 Assert.True(MathHelper.EqualRotation(expected, actual),
-                    string.Format("Quaternion.CreateFromRotationMatrix did not return the expected value. angle:{0}",
-                    angle.ToString()));
+                  $"Quaternion.CreateFromRotationMatrix did not return the expected value. angle:{angle.ToString()}");
 
                 // make sure convert back to matrix is same as we passed matrix.
                 Matrix4x4 m2 = Matrix4x4.CreateFromQuaternion(actual);
                 Assert.True(MathHelper.Equal(matrix, m2),
-                    string.Format("Quaternion.CreateFromRotationMatrix did not return the expected value. angle:{0}",
-                    angle.ToString()));
+                  $"Quaternion.CreateFromRotationMatrix did not return the expected value. angle:{angle.ToString()}");
             }
         }
 

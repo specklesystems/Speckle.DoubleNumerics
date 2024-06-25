@@ -37,7 +37,7 @@ namespace System.DoubleNumerics.Tests
             Plane b = new Plane(1.0, 2.0, 3.0, 4.0);
 
             // case 1: compare between same values
-            object obj = b;
+            object? obj = b;
 
             bool expected = true;
             bool actual = a.Equals(obj);
@@ -147,7 +147,7 @@ namespace System.DoubleNumerics.Tests
             Vector3 point3 = new Vector3(1.0, 1.0, 0.0);
 
             Plane target = Plane.CreateFromVertices(point1, point2, point3);
-            double invRoot2 = (double)(1 / Math.Sqrt(2));
+            double invRoot2 = 1 / Math.Sqrt(2);
 
             Plane expected = new Plane(new Vector3(invRoot2, 0, invRoot2), -invRoot2);
             Assert.True(MathHelper.Equal(target, expected), "Plane.cstor did not return the expected value.");
@@ -217,7 +217,7 @@ namespace System.DoubleNumerics.Tests
             Plane target = new Plane(1, 2, 3, 4);
 
             double f = target.Normal.LengthSquared();
-            double invF = 1.0 / (double)Math.Sqrt(f);
+            double invF = 1.0 / Math.Sqrt(f);
             Plane expected = new Plane(target.Normal * invF, target.D * invF);
 
             Plane actual = Plane.Normalize(target);

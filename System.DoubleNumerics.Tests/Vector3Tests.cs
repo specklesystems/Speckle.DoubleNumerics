@@ -133,7 +133,7 @@ namespace System.DoubleNumerics.Tests
             Vector3 a = new Vector3(1.0, 2.0, 3.0);
             Vector3 b = new Vector3(4.0, 5.0, 6.0);
 
-            double expected = (double)Math.Sqrt(27);
+            double expected = Math.Sqrt(27);
             double actual;
 
             actual = Vector3.Distance(a, b);
@@ -208,7 +208,7 @@ namespace System.DoubleNumerics.Tests
 
             Vector3 target = new Vector3(a, z);
 
-            double expected = (double)Math.Sqrt(14.0);
+            double expected = Math.Sqrt(14.0);
             double actual;
 
             actual = target.Length();
@@ -891,7 +891,7 @@ namespace System.DoubleNumerics.Tests
             Vector3 b = new Vector3(1.0, 2.0, 3.0);
 
             // case 1: compare between same values
-            object obj = b;
+            object? obj = b;
 
             bool expected = true;
             bool actual = a.Equals(obj);

@@ -40,8 +40,8 @@ namespace System.DoubleNumerics
         /// <returns>The hash code.</returns>
         public override int GetHashCode()
         {
-            int hash = this.X.GetHashCode();
-            hash = HashHelpers.Combine(hash, this.Y.GetHashCode());
+            int hash = X.GetHashCode();
+            hash = HashHelpers.Combine(hash, Y.GetHashCode());
             return hash;
         }
 
@@ -51,11 +51,11 @@ namespace System.DoubleNumerics
         /// <param name="obj">The Object to compare against.</param>
         /// <returns>True if the Object is equal to this Vector2; False otherwise.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is Vector2))
+            if (!(obj is Vector2 vector2))
                 return false;
-            return Equals((Vector2)obj);
+            return Equals(vector2);
         }
 
 
@@ -85,15 +85,15 @@ namespace System.DoubleNumerics
         /// <param name="format">The format of individual elements.</param>
         /// <param name="formatProvider">The format provider to use when formatting elements.</param>
         /// <returns>The string representation.</returns>
-        public string ToString(string format, IFormatProvider formatProvider)
+        public string ToString(string? format, IFormatProvider? formatProvider)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;
             sb.Append('<');
-            sb.Append(this.X.ToString(format, formatProvider));
+            sb.Append(X.ToString(format, formatProvider));
             sb.Append(separator);
             sb.Append(' ');
-            sb.Append(this.Y.ToString(format, formatProvider));
+            sb.Append(Y.ToString(format, formatProvider));
             sb.Append('>');
             return sb.ToString();
         }
@@ -106,7 +106,7 @@ namespace System.DoubleNumerics
         public double Length()
         {
             double ls = X * X + Y * Y;
-                return (double)Math.Sqrt((double)ls);
+                return Math.Sqrt(ls);
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace System.DoubleNumerics
 
                 double ls = dx * dx + dy * dy;
 
-                return (double)Math.Sqrt((double)ls);
+                return Math.Sqrt(ls);
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace System.DoubleNumerics
         public static Vector2 Normalize(Vector2 value)
         {
             double ls = value.X * value.X + value.Y * value.Y;
-                double invNorm = 1.0 / (double)Math.Sqrt((double)ls);
+                double invNorm = 1.0 / Math.Sqrt(ls);
 
                 return new Vector2(
                     value.X * invNorm,

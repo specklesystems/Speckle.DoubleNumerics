@@ -73,7 +73,7 @@ namespace System.DoubleNumerics
         /// <exception cref="ArgumentOutOfRangeException">If index is greater than end of the array or index is less than zero.</exception>
         /// <exception cref="ArgumentException">If number of elements in source vector is greater than those available in destination array.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void CopyTo(Double[] array, int index)
+        public void CopyTo(Double[]? array, int index)
         {
             if (array == null)
             {
@@ -169,7 +169,7 @@ namespace System.DoubleNumerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 SquareRoot(Vector3 value)
         {
-            return new Vector3((Double)Math.Sqrt(value.X), (Double)Math.Sqrt(value.Y), (Double)Math.Sqrt(value.Z));
+            return new Vector3(Math.Sqrt(value.X), Math.Sqrt(value.Y), Math.Sqrt(value.Z));
         }
         #endregion Public Static Methods
 

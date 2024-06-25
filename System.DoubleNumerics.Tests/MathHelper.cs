@@ -6,7 +6,7 @@ namespace System.DoubleNumerics.Tests
 {
     static class MathHelper
     {
-        public const double Pi = (double)Math.PI;
+        public const double Pi = Math.PI;
         public const double PiOver2 = Pi / 2f;
         public const double PiOver4 = Pi / 4f;
 

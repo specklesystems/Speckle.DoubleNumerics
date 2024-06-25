@@ -491,7 +491,7 @@ namespace System.DoubleNumerics.Tests
             Matrix3x2 b = GenerateMatrixNumberFrom1To6();
 
             // case 1: compare between same values
-            object obj = b;
+            object? obj = b;
 
             bool expected = true;
             bool actual = a.Equals(obj);

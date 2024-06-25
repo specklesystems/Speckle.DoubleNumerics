@@ -100,7 +100,7 @@ namespace System.DoubleNumerics.Tests
             Vector2 a = new Vector2(1.0, 2.0);
             Vector2 b = new Vector2(3.0, 4.0);
 
-            double expected = (double)Math.Sqrt(8);
+            double expected = Math.Sqrt(8);
             double actual;
 
             actual = Vector2.Distance(a, b);
@@ -180,7 +180,7 @@ namespace System.DoubleNumerics.Tests
 
             Vector2 target = a;
 
-            double expected = (double)Math.Sqrt(20);
+            double expected = Math.Sqrt(20);
             double actual;
 
             actual = target.Length();
@@ -852,7 +852,7 @@ namespace System.DoubleNumerics.Tests
             Vector2 b = new Vector2(1.0, 2.0);
 
             // case 1: compare between same values
-            object obj = b;
+            object? obj = b;
 
             bool expected = true;
             bool actual = a.Equals(obj);
