@@ -10,7 +10,7 @@ namespace Speckle.DoubleNumerics;
 /// <summary>
 /// A structure encapsulating a 3D Plane
 /// </summary>
-public struct Plane : IEquatable<Plane>
+public partial struct Plane : IEquatable<Plane>
 {
   /// <summary>
   /// The normal vector of the Plane.
