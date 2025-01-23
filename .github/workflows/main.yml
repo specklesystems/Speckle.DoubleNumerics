@@ -3,6 +3,7 @@ name: .NET Build and Publish
 on:
   push:
     branches: ["master"] 
+    tags:
 
 jobs:
   build:
