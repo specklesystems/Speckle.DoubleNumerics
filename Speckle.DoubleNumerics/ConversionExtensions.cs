@@ -41,7 +41,8 @@ public static class ConversionExtensions
   /// </summary>
   /// <param name="value">The <see cref="Quaternion"/> to convert.</param>
   /// <returns>A <see cref="Vector256{Double}"/> representation of the <see cref="Quaternion"/>.</returns>
-  public static Vector256<double> AsVector256(this Quaternion value) => Unsafe.As<Quaternion, Vector256<double>>(ref value);
+  public static Vector256<double> AsVector256(this Quaternion value) =>
+    Unsafe.As<Quaternion, Vector256<double>>(ref value);
 
   /// <summary>
   /// Reinterprets a <see cref="Vector2"/> as a new <see cref="Vector3"/> with the new element zeroed.
@@ -132,7 +133,8 @@ public static class ConversionExtensions
   /// </summary>
   /// <param name="value">The <see cref="Vector256{Double}"/> to convert.</param>
   /// <returns>A <see cref="Quaternion"/> representation of the <see cref="Vector256{Double}"/>.</returns>
-  public static Quaternion AsQuaternion(this Vector256<double> value) => Unsafe.As<Vector256<double>, Quaternion>(ref value);
+  public static Quaternion AsQuaternion(this Vector256<double> value) =>
+    Unsafe.As<Vector256<double>, Quaternion>(ref value);
 
   /// <summary>
   /// Reinterprets a <see cref="Vector256{Double}"/> as a new <see cref="Vector2"/>.
