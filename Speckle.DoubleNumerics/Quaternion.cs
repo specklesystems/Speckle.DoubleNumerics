@@ -10,7 +10,7 @@ namespace Speckle.DoubleNumerics;
 /// A structure encapsulating a four-dimensional vector (x,y,z,w),
 /// which is used to efficiently rotate an object about the (x,y,z) vector by the angle theta, where w = cos(theta/2).
 /// </summary>
-public struct Quaternion : IEquatable<Quaternion>
+public partial struct Quaternion : IEquatable<Quaternion>
 {
   /// <summary>
   /// Specifies the X-value of the vector component of the Quaternion.
