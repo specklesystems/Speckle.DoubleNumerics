@@ -221,6 +221,6 @@ public class Perf_Vector2
     SquareRoot = 8,
     Length_Squared = 9,
     Normalize = 10,
-    Distance_Squared = 11
+    Distance_Squared = 11,
   }
 }

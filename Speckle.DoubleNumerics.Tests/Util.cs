@@ -133,11 +133,9 @@ public static class Util
     where T : struct => (T)(~(dynamic)left);
 
   public static double Clamp(double value, double min, double max) =>
-    value > max
-      ? max
-      : value < min
-        ? min
-        : value;
+    value > max ? max
+    : value < min ? min
+    : value;
 
   public static T Zero<T>()
     where T : struct => (T)(dynamic)0;
