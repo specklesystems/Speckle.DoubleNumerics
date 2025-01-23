@@ -615,7 +615,7 @@ public class Matrix4x4Tests
   public void Matrix4x4CreateShadowTest02()
   {
     // Complex cases.
-    Plane[] planes = { new(0, 1, 0, 0), new(1, 2, 3, 4), new(5, 6, 7, 8), new(-1, -2, -3, -4), new(-5, -6, -7, -8), };
+    Plane[] planes = { new(0, 1, 0, 0), new(1, 2, 3, 4), new(5, 6, 7, 8), new(-1, -2, -3, -4), new(-5, -6, -7, -8) };
 
     Vector3[] points =
     {
@@ -715,9 +715,9 @@ public class Matrix4x4Tests
     CreateReflectionTest(new Plane(Vector3.UnitX, 0), Matrix4x4.CreateScale(-1, 1, 1));
 
     // Complex cases.
-    Plane[] planes = { new(0, 1, 0, 0), new(1, 2, 3, 4), new(5, 6, 7, 8), new(-1, -2, -3, -4), new(-5, -6, -7, -8), };
+    Plane[] planes = { new(0, 1, 0, 0), new(1, 2, 3, 4), new(5, 6, 7, 8), new(-1, -2, -3, -4), new(-5, -6, -7, -8) };
 
-    Vector3[] points = { new(1, 2, 3), new(5, 6, 7), new(-1, -2, -3), new(-5, -6, -7), };
+    Vector3[] points = { new(1, 2, 3), new(5, 6, 7), new(-1, -2, -3), new(-5, -6, -7) };
 
     foreach (Plane p in planes)
     {

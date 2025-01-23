@@ -221,12 +221,11 @@ public struct Matrix4x4 : IEquatable<Matrix4x4>
   {
     const double epsilon = 1e-4;
 
-    Vector3 zaxis =
-      new(
-        objectPosition.X - cameraPosition.X,
-        objectPosition.Y - cameraPosition.Y,
-        objectPosition.Z - cameraPosition.Z
-      );
+    Vector3 zaxis = new(
+      objectPosition.X - cameraPosition.X,
+      objectPosition.Y - cameraPosition.Y,
+      objectPosition.Z - cameraPosition.Z
+    );
 
     double norm = zaxis.LengthSquared();
 
@@ -287,12 +286,11 @@ public struct Matrix4x4 : IEquatable<Matrix4x4>
     const double minAngle = 1.0 - (0.1 * (Math.PI / 180.0)); // 0.1 degrees
 
     // Treat the case when object and camera positions are too close.
-    Vector3 faceDir =
-      new(
-        objectPosition.X - cameraPosition.X,
-        objectPosition.Y - cameraPosition.Y,
-        objectPosition.Z - cameraPosition.Z
-      );
+    Vector3 faceDir = new(
+      objectPosition.X - cameraPosition.X,
+      objectPosition.Y - cameraPosition.Y,
+      objectPosition.Z - cameraPosition.Z
+    );
 
     double norm = faceDir.LengthSquared();
 

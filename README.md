@@ -7,3 +7,5 @@ Forked from https://github.com/Weingartner/System.Numerics.DoubleVectors and upd
 Needed because of:
 - https://github.com/specklesystems/speckle-sharp/issues/2800
 - https://github.com/dotnet/runtime/issues/24168
+
+[CSharpier](https://csharpier.com/) used for formatting.
