@@ -5,6 +5,9 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
+#if NET8_0_OR_GREATER
+using System.Runtime.Intrinsics;
+#endif
 
 namespace Speckle.DoubleNumerics;
 
@@ -109,18 +112,14 @@ public partial struct Vector3 : IEquatable<Vector3>, IFormattable
   /// </summary>
   /// <returns>The vector's length.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public double Length()
-  {
-    double ls = X * X + Y * Y + Z * Z;
-    return Math.Sqrt(ls);
-  }
+  public double Length() => Math.Sqrt(LengthSquared());
 
   /// <summary>
   /// Returns the length of the vector squared. This operation is cheaper than Length().
   /// </summary>
   /// <returns>The vector's length squared.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public double LengthSquared() => X * X + Y * Y + Z * Z;
+  public double LengthSquared() => Dot(this, this);
 
   #endregion Public Instance Methods
 
@@ -132,16 +131,7 @@ public partial struct Vector3 : IEquatable<Vector3>, IFormattable
   /// <param name="value2">The second point.</param>
   /// <returns>The distance.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static double Distance(Vector3 value1, Vector3 value2)
-  {
-    double dx = value1.X - value2.X;
-    double dy = value1.Y - value2.Y;
-    double dz = value1.Z - value2.Z;
-
-    double ls = dx * dx + dy * dy + dz * dz;
-
-    return Math.Sqrt(ls);
-  }
+  public static double Distance(Vector3 value1, Vector3 value2) => Math.Sqrt(DistanceSquared(value1, value2));
 
   /// <summary>
   /// Returns the Euclidean distance squared between the two given points.
@@ -150,14 +140,7 @@ public partial struct Vector3 : IEquatable<Vector3>, IFormattable
   /// <param name="value2">The second point.</param>
   /// <returns>The distance squared.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static double DistanceSquared(Vector3 value1, Vector3 value2)
-  {
-    double dx = value1.X - value2.X;
-    double dy = value1.Y - value2.Y;
-    double dz = value1.Z - value2.Z;
-
-    return dx * dx + dy * dy + dz * dz;
-  }
+  public static double DistanceSquared(Vector3 value1, Vector3 value2) => (value1 - value2).LengthSquared();
 
   /// <summary>
   /// Returns a vector with the same direction as the given vector, but with a length of 1.
@@ -167,9 +150,13 @@ public partial struct Vector3 : IEquatable<Vector3>, IFormattable
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Vector3 Normalize(Vector3 value)
   {
+#if NET8_0_OR_GREATER
+    return (value.AsVector256() / value.Length()).AsVector3();
+#else
     double ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z;
     double length = Math.Sqrt(ls);
     return new Vector3(value.X / length, value.Y / length, value.Z / length);
+#endif
   }
 
   /// <summary>
@@ -178,6 +165,8 @@ public partial struct Vector3 : IEquatable<Vector3>, IFormattable
   /// <param name="vector1">The first vector.</param>
   /// <param name="vector2">The second vector.</param>
   /// <returns>The cross product.</returns>
+  // Deliberately scalar: the cross-lane shuffles (vpermpd) plus Vector3 packing cost more
+  // than the six multiplies and three subtractions they replace.
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Vector3 Cross(Vector3 vector1, Vector3 vector2) =>
     new(
@@ -192,6 +181,7 @@ public partial struct Vector3 : IEquatable<Vector3>, IFormattable
   /// <param name="vector">The source vector.</param>
   /// <param name="normal">The normal of the surface being reflected off.</param>
   /// <returns>The reflected vector.</returns>
+  // Deliberately scalar: see Cross. Benchmarks showed the SIMD version 2x slower.
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Vector3 Reflect(Vector3 vector, Vector3 normal)
   {
@@ -215,6 +205,12 @@ public partial struct Vector3 : IEquatable<Vector3>, IFormattable
     // This compare order is very important!!!
     // We must follow HLSL behavior in the case user specified min value is bigger than max value.
 
+#if NET8_0_OR_GREATER
+    Vector256<double> result = value1.AsVector256();
+    result = Vector256.ConditionalSelect(Vector256.GreaterThan(result, max.AsVector256()), max.AsVector256(), result);
+    result = Vector256.ConditionalSelect(Vector256.LessThan(result, min.AsVector256()), min.AsVector256(), result);
+    return result.AsVector3();
+#else
     double x = value1.X;
     x = (x > max.X) ? max.X : x;
     x = (x < min.X) ? min.X : x;
@@ -228,6 +224,7 @@ public partial struct Vector3 : IEquatable<Vector3>, IFormattable
     z = (z < min.Z) ? min.Z : z;
 
     return new Vector3(x, y, z);
+#endif
   }
 
   /// <summary>
@@ -238,12 +235,7 @@ public partial struct Vector3 : IEquatable<Vector3>, IFormattable
   /// <param name="amount">Value between 0 and 1 indicating the weight of the second source vector.</param>
   /// <returns>The interpolated vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector3 Lerp(Vector3 value1, Vector3 value2, double amount) =>
-    new(
-      value1.X + (value2.X - value1.X) * amount,
-      value1.Y + (value2.Y - value1.Y) * amount,
-      value1.Z + (value2.Z - value1.Z) * amount
-    );
+  public static Vector3 Lerp(Vector3 value1, Vector3 value2, double amount) => value1 + (value2 - value1) * amount;
 
   /// <summary>
   /// Transforms a vector by the given matrix.
@@ -252,12 +244,22 @@ public partial struct Vector3 : IEquatable<Vector3>, IFormattable
   /// <param name="matrix">The transformation matrix.</param>
   /// <returns>The transformed vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector3 Transform(Vector3 position, Matrix4x4 matrix) =>
-    new(
+  public static Vector3 Transform(Vector3 position, Matrix4x4 matrix)
+  {
+#if NET8_0_OR_GREATER
+    Vector256<double> result = Vector256.Create(position.X) * Vector256.LoadUnsafe(ref matrix.M11);
+    result += Vector256.Create(position.Y) * Vector256.LoadUnsafe(ref matrix.M21);
+    result += Vector256.Create(position.Z) * Vector256.LoadUnsafe(ref matrix.M31);
+    result += Vector256.LoadUnsafe(ref matrix.M41);
+    return result.AsVector3();
+#else
+    return new(
       position.X * matrix.M11 + position.Y * matrix.M21 + position.Z * matrix.M31 + matrix.M41,
       position.X * matrix.M12 + position.Y * matrix.M22 + position.Z * matrix.M32 + matrix.M42,
       position.X * matrix.M13 + position.Y * matrix.M23 + position.Z * matrix.M33 + matrix.M43
     );
+#endif
+  }
 
   /// <summary>
   /// Transforms a vector normal by the given matrix.
@@ -266,12 +268,21 @@ public partial struct Vector3 : IEquatable<Vector3>, IFormattable
   /// <param name="matrix">The transformation matrix.</param>
   /// <returns>The transformed vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector3 TransformNormal(Vector3 normal, Matrix4x4 matrix) =>
-    new(
+  public static Vector3 TransformNormal(Vector3 normal, Matrix4x4 matrix)
+  {
+#if NET8_0_OR_GREATER
+    Vector256<double> result = Vector256.Create(normal.X) * Vector256.LoadUnsafe(ref matrix.M11);
+    result += Vector256.Create(normal.Y) * Vector256.LoadUnsafe(ref matrix.M21);
+    result += Vector256.Create(normal.Z) * Vector256.LoadUnsafe(ref matrix.M31);
+    return result.AsVector3();
+#else
+    return new(
       normal.X * matrix.M11 + normal.Y * matrix.M21 + normal.Z * matrix.M31,
       normal.X * matrix.M12 + normal.Y * matrix.M22 + normal.Z * matrix.M32,
       normal.X * matrix.M13 + normal.Y * matrix.M23 + normal.Z * matrix.M33
     );
+#endif
+  }
 
   /// <summary>
   /// Transforms a vector by the given Quaternion rotation value.

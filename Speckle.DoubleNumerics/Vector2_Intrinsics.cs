@@ -3,6 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Runtime.CompilerServices;
+#if NET8_0_OR_GREATER
+using System.Runtime.Intrinsics;
+#endif
 
 namespace Speckle.DoubleNumerics;
 
@@ -86,7 +89,14 @@ public partial struct Vector2
   /// </summary>
   /// <param name="other">The Vector2 to compare this instance to.</param>
   /// <returns>True if the other Vector2 is equal to this instance; False otherwise.</returns>
-  public bool Equals(Vector2 other) => X == other.X && Y == other.Y;
+  public bool Equals(Vector2 other)
+  {
+#if NET8_0_OR_GREATER
+    return Vector128.EqualsAll(this.AsVector128(), other.AsVector128());
+#else
+    return X == other.X && Y == other.Y;
+#endif
+  }
 
   #endregion Public Instance Methods
 
@@ -97,6 +107,8 @@ public partial struct Vector2
   /// <param name="value1">The first vector.</param>
   /// <param name="value2">The second vector.</param>
   /// <returns>The dot product.</returns>
+  // Deliberately scalar: the horizontal add (vhaddpd) is slower than two independent
+  // scalar multiplies and an add.
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static double Dot(Vector2 value1, Vector2 value2) => value1.X * value2.X + value1.Y * value2.Y;
 
@@ -107,8 +119,16 @@ public partial struct Vector2
   /// <param name="value2">The second source vector.</param>
   /// <returns>The minimized vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector2 Min(Vector2 value1, Vector2 value2) =>
-    new((value1.X < value2.X) ? value1.X : value2.X, (value1.Y < value2.Y) ? value1.Y : value2.Y);
+  public static Vector2 Min(Vector2 value1, Vector2 value2)
+  {
+#if NET8_0_OR_GREATER
+    Vector128<double> v1 = value1.AsVector128();
+    Vector128<double> v2 = value2.AsVector128();
+    return Vector128.ConditionalSelect(Vector128.LessThan(v1, v2), v1, v2).AsVector2();
+#else
+    return new((value1.X < value2.X) ? value1.X : value2.X, (value1.Y < value2.Y) ? value1.Y : value2.Y);
+#endif
+  }
 
   /// <summary>
   /// Returns a vector whose elements are the maximum of each of the pairs of elements in the two source vectors
@@ -117,8 +137,16 @@ public partial struct Vector2
   /// <param name="value2">The second source vector</param>
   /// <returns>The maximized vector</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector2 Max(Vector2 value1, Vector2 value2) =>
-    new((value1.X > value2.X) ? value1.X : value2.X, (value1.Y > value2.Y) ? value1.Y : value2.Y);
+  public static Vector2 Max(Vector2 value1, Vector2 value2)
+  {
+#if NET8_0_OR_GREATER
+    Vector128<double> v1 = value1.AsVector128();
+    Vector128<double> v2 = value2.AsVector128();
+    return Vector128.ConditionalSelect(Vector128.GreaterThan(v1, v2), v1, v2).AsVector2();
+#else
+    return new((value1.X > value2.X) ? value1.X : value2.X, (value1.Y > value2.Y) ? value1.Y : value2.Y);
+#endif
+  }
 
   /// <summary>
   /// Returns a vector whose elements are the absolute values of each of the source vector's elements.
@@ -126,7 +154,14 @@ public partial struct Vector2
   /// <param name="value">The source vector.</param>
   /// <returns>The absolute value vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector2 Abs(Vector2 value) => new(Math.Abs(value.X), Math.Abs(value.Y));
+  public static Vector2 Abs(Vector2 value)
+  {
+#if NET8_0_OR_GREATER
+    return Vector128.Abs(value.AsVector128()).AsVector2();
+#else
+    return new(Math.Abs(value.X), Math.Abs(value.Y));
+#endif
+  }
 
   /// <summary>
   /// Returns a vector whose elements are the square root of each of the source vector's elements.
@@ -134,7 +169,14 @@ public partial struct Vector2
   /// <param name="value">The source vector.</param>
   /// <returns>The square root vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector2 SquareRoot(Vector2 value) => new(Math.Sqrt(value.X), Math.Sqrt(value.Y));
+  public static Vector2 SquareRoot(Vector2 value)
+  {
+#if NET8_0_OR_GREATER
+    return Vector128.Sqrt(value.AsVector128()).AsVector2();
+#else
+    return new(Math.Sqrt(value.X), Math.Sqrt(value.Y));
+#endif
+  }
 
   #endregion Public Static Methods
 
@@ -145,6 +187,10 @@ public partial struct Vector2
   /// <param name="left">The first source vector.</param>
   /// <param name="right">The second source vector.</param>
   /// <returns>The summed vector.</returns>
+  // The lane-wise operators are deliberately scalar: the JIT promotes Vector2's two double
+  // fields to separate registers, so reinterpreting as Vector128 forces a round-trip through
+  // memory that costs more than the two scalar operations it replaces. SIMD is reserved for
+  // the self-contained methods that win (Min, Max, Clamp, SquareRoot, Transform).
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Vector2 operator +(Vector2 left, Vector2 right) => new(left.X + right.X, left.Y + right.Y);
 
@@ -173,7 +219,7 @@ public partial struct Vector2
   /// <param name="right">The source vector.</param>
   /// <returns>The scaled vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector2 operator *(Double left, Vector2 right) => new Vector2(left, left) * right;
+  public static Vector2 operator *(Double left, Vector2 right) => right * left;
 
   /// <summary>
   /// Multiplies a vector by the given scalar.

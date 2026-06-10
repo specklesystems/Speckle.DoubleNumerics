@@ -64,6 +64,10 @@ public partial struct Plane : IEquatable<Plane>
   /// <param name="point2">The second point defining the Plane.</param>
   /// <param name="point3">The third point defining the Plane.</param>
   /// <returns>The Plane containing the three points.</returns>
+  // Plane deliberately stays scalar: it embeds a Vector3, and the JIT copies nested structs
+  // field-by-field, so reinterpreting a Plane as Vector256 round-trips memory and costs more
+  // than the scalar math it would replace (unlike Vector4/Quaternion, whose flat fields load
+  // directly into a vector register).
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Plane CreateFromVertices(Vector3 point1, Vector3 point2, Vector3 point3)
   {
@@ -98,7 +102,7 @@ public partial struct Plane : IEquatable<Plane>
   public static Plane Normalize(Plane value)
   {
     const double FLT_EPSILON = 1.192092896e-07; // smallest such that 1.0+FLT_EPSILON != 1.0
-    double f = value.Normal.X * value.Normal.X + value.Normal.Y * value.Normal.Y + value.Normal.Z * value.Normal.Z;
+    double f = value.Normal.LengthSquared();
 
     if (Math.Abs(f - 1.0) < FLT_EPSILON)
     {
@@ -207,8 +211,7 @@ public partial struct Plane : IEquatable<Plane>
   /// <param name="value">The Vector3.</param>
   /// <returns>The resulting dot product.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static double DotNormal(Plane plane, Vector3 value) =>
-    plane.Normal.X * value.X + plane.Normal.Y * value.Y + plane.Normal.Z * value.Z;
+  public static double DotNormal(Plane plane, Vector3 value) => Vector3.Dot(plane.Normal, value);
 
   /// <summary>
   /// Returns a boolean indicating whether the two given Planes are equal.
@@ -218,12 +221,10 @@ public partial struct Plane : IEquatable<Plane>
   /// <returns>True if the Planes are equal; False otherwise.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static bool operator ==(Plane value1, Plane value2) =>
-    (
-      value1.Normal.X == value2.Normal.X
-      && value1.Normal.Y == value2.Normal.Y
-      && value1.Normal.Z == value2.Normal.Z
-      && value1.D == value2.D
-    );
+    value1.Normal.X == value2.Normal.X
+    && value1.Normal.Y == value2.Normal.Y
+    && value1.Normal.Z == value2.Normal.Z
+    && value1.D == value2.D;
 
   /// <summary>
   /// Returns a boolean indicating whether the two given Planes are not equal.
@@ -232,13 +233,7 @@ public partial struct Plane : IEquatable<Plane>
   /// <param name="value2">The second Plane to compare.</param>
   /// <returns>True if the Planes are not equal; False if they are equal.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static bool operator !=(Plane value1, Plane value2) =>
-    (
-      value1.Normal.X != value2.Normal.X
-      || value1.Normal.Y != value2.Normal.Y
-      || value1.Normal.Z != value2.Normal.Z
-      || value1.D != value2.D
-    );
+  public static bool operator !=(Plane value1, Plane value2) => !(value1 == value2);
 
   /// <summary>
   /// Returns a boolean indicating whether the given Plane is equal to this Plane instance.
@@ -246,8 +241,7 @@ public partial struct Plane : IEquatable<Plane>
   /// <param name="other">The Plane to compare this instance to.</param>
   /// <returns>True if the other Plane is equal to this instance; False otherwise.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public bool Equals(Plane other) =>
-    (Normal.X == other.Normal.X && Normal.Y == other.Normal.Y && Normal.Z == other.Normal.Z && D == other.D);
+  public bool Equals(Plane other) => this == other;
 
   /// <summary>
   /// Returns a boolean indicating whether the given Object is equal to this Plane instance.

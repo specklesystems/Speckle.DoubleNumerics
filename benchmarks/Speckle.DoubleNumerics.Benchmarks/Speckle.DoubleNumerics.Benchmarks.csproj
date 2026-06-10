@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" />
+  </ItemGroup>
+  <!-- Pass -p:ScalarBaseline=true to benchmark the netstandard2.0 (scalar) build of the library
+       instead of the net10.0 (SIMD) build. Build the library in Release first. -->
+  <ItemGroup Condition="'$(ScalarBaseline)' == 'true'">
+    <Reference Include="Speckle.DoubleNumerics">
+      <HintPath>..\..\Speckle.DoubleNumerics\bin\Release\netstandard2.0\Speckle.DoubleNumerics.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(ScalarBaseline)' != 'true'">
+    <ProjectReference Include="..\..\Speckle.DoubleNumerics\Speckle.DoubleNumerics.csproj" />
+  </ItemGroup>
+</Project>

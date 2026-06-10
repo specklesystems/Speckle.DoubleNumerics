@@ -5,6 +5,9 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
+#if NET8_0_OR_GREATER
+using System.Runtime.Intrinsics;
+#endif
 
 namespace Speckle.DoubleNumerics;
 
@@ -117,19 +120,14 @@ public partial struct Vector4 : IEquatable<Vector4>, IFormattable
   /// </summary>
   /// <returns>The vector's length.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public double Length()
-  {
-    double ls = X * X + Y * Y + Z * Z + W * W;
-
-    return Math.Sqrt(ls);
-  }
+  public double Length() => Math.Sqrt(LengthSquared());
 
   /// <summary>
   /// Returns the length of the vector squared.
   /// </summary>
   /// <returns>The vector's length squared.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public double LengthSquared() => X * X + Y * Y + Z * Z + W * W;
+  public double LengthSquared() => Dot(this, this);
 
   #endregion Public Instance Methods
 
@@ -141,17 +139,7 @@ public partial struct Vector4 : IEquatable<Vector4>, IFormattable
   /// <param name="value2">The second point.</param>
   /// <returns>The distance.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static double Distance(Vector4 value1, Vector4 value2)
-  {
-    double dx = value1.X - value2.X;
-    double dy = value1.Y - value2.Y;
-    double dz = value1.Z - value2.Z;
-    double dw = value1.W - value2.W;
-
-    double ls = dx * dx + dy * dy + dz * dz + dw * dw;
-
-    return Math.Sqrt(ls);
-  }
+  public static double Distance(Vector4 value1, Vector4 value2) => Math.Sqrt(DistanceSquared(value1, value2));
 
   /// <summary>
   /// Returns the Euclidean distance squared between the two given points.
@@ -160,15 +148,7 @@ public partial struct Vector4 : IEquatable<Vector4>, IFormattable
   /// <param name="value2">The second point.</param>
   /// <returns>The distance squared.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static double DistanceSquared(Vector4 value1, Vector4 value2)
-  {
-    double dx = value1.X - value2.X;
-    double dy = value1.Y - value2.Y;
-    double dz = value1.Z - value2.Z;
-    double dw = value1.W - value2.W;
-
-    return dx * dx + dy * dy + dz * dz + dw * dw;
-  }
+  public static double DistanceSquared(Vector4 value1, Vector4 value2) => (value1 - value2).LengthSquared();
 
   /// <summary>
   /// Returns a vector with the same direction as the given vector, but with a length of 1.
@@ -176,13 +156,7 @@ public partial struct Vector4 : IEquatable<Vector4>, IFormattable
   /// <param name="vector">The vector to normalize.</param>
   /// <returns>The normalized vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector4 Normalize(Vector4 vector)
-  {
-    double ls = vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z + vector.W * vector.W;
-    double invNorm = 1.0 / Math.Sqrt(ls);
-
-    return new Vector4(vector.X * invNorm, vector.Y * invNorm, vector.Z * invNorm, vector.W * invNorm);
-  }
+  public static Vector4 Normalize(Vector4 vector) => vector / vector.Length();
 
   /// <summary>
   /// Restricts a vector between a min and max value.
@@ -197,6 +171,12 @@ public partial struct Vector4 : IEquatable<Vector4>, IFormattable
     // This compare order is very important!!!
     // We must follow HLSL behavior in the case user specified min value is bigger than max value.
 
+#if NET8_0_OR_GREATER
+    Vector256<double> result = value1.AsVector256();
+    result = Vector256.ConditionalSelect(Vector256.GreaterThan(result, max.AsVector256()), max.AsVector256(), result);
+    result = Vector256.ConditionalSelect(Vector256.LessThan(result, min.AsVector256()), min.AsVector256(), result);
+    return result.AsVector4();
+#else
     double x = value1.X;
     x = (x > max.X) ? max.X : x;
     x = (x < min.X) ? min.X : x;
@@ -214,6 +194,7 @@ public partial struct Vector4 : IEquatable<Vector4>, IFormattable
     w = (w < min.W) ? min.W : w;
 
     return new Vector4(x, y, z, w);
+#endif
   }
 
   /// <summary>
@@ -224,13 +205,7 @@ public partial struct Vector4 : IEquatable<Vector4>, IFormattable
   /// <param name="amount">Value between 0 and 1 indicating the weight of the second source vector.</param>
   /// <returns>The interpolated vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector4 Lerp(Vector4 value1, Vector4 value2, double amount) =>
-    new(
-      value1.X + (value2.X - value1.X) * amount,
-      value1.Y + (value2.Y - value1.Y) * amount,
-      value1.Z + (value2.Z - value1.Z) * amount,
-      value1.W + (value2.W - value1.W) * amount
-    );
+  public static Vector4 Lerp(Vector4 value1, Vector4 value2, double amount) => value1 + (value2 - value1) * amount;
 
   /// <summary>
   /// Transforms a vector by the given matrix.
@@ -239,13 +214,22 @@ public partial struct Vector4 : IEquatable<Vector4>, IFormattable
   /// <param name="matrix">The transformation matrix.</param>
   /// <returns>The transformed vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector4 Transform(Vector2 position, Matrix4x4 matrix) =>
-    new(
+  public static Vector4 Transform(Vector2 position, Matrix4x4 matrix)
+  {
+#if NET8_0_OR_GREATER
+    Vector256<double> result = Vector256.Create(position.X) * Vector256.LoadUnsafe(ref matrix.M11);
+    result += Vector256.Create(position.Y) * Vector256.LoadUnsafe(ref matrix.M21);
+    result += Vector256.LoadUnsafe(ref matrix.M41);
+    return result.AsVector4();
+#else
+    return new(
       position.X * matrix.M11 + position.Y * matrix.M21 + matrix.M41,
       position.X * matrix.M12 + position.Y * matrix.M22 + matrix.M42,
       position.X * matrix.M13 + position.Y * matrix.M23 + matrix.M43,
       position.X * matrix.M14 + position.Y * matrix.M24 + matrix.M44
     );
+#endif
+  }
 
   /// <summary>
   /// Transforms a vector by the given matrix.
@@ -254,13 +238,23 @@ public partial struct Vector4 : IEquatable<Vector4>, IFormattable
   /// <param name="matrix">The transformation matrix.</param>
   /// <returns>The transformed vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector4 Transform(Vector3 position, Matrix4x4 matrix) =>
-    new(
+  public static Vector4 Transform(Vector3 position, Matrix4x4 matrix)
+  {
+#if NET8_0_OR_GREATER
+    Vector256<double> result = Vector256.Create(position.X) * Vector256.LoadUnsafe(ref matrix.M11);
+    result += Vector256.Create(position.Y) * Vector256.LoadUnsafe(ref matrix.M21);
+    result += Vector256.Create(position.Z) * Vector256.LoadUnsafe(ref matrix.M31);
+    result += Vector256.LoadUnsafe(ref matrix.M41);
+    return result.AsVector4();
+#else
+    return new(
       position.X * matrix.M11 + position.Y * matrix.M21 + position.Z * matrix.M31 + matrix.M41,
       position.X * matrix.M12 + position.Y * matrix.M22 + position.Z * matrix.M32 + matrix.M42,
       position.X * matrix.M13 + position.Y * matrix.M23 + position.Z * matrix.M33 + matrix.M43,
       position.X * matrix.M14 + position.Y * matrix.M24 + position.Z * matrix.M34 + matrix.M44
     );
+#endif
+  }
 
   /// <summary>
   /// Transforms a vector by the given matrix.
@@ -269,13 +263,23 @@ public partial struct Vector4 : IEquatable<Vector4>, IFormattable
   /// <param name="matrix">The transformation matrix.</param>
   /// <returns>The transformed vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector4 Transform(Vector4 vector, Matrix4x4 matrix) =>
-    new(
+  public static Vector4 Transform(Vector4 vector, Matrix4x4 matrix)
+  {
+#if NET8_0_OR_GREATER
+    Vector256<double> result = Vector256.Create(vector.X) * Vector256.LoadUnsafe(ref matrix.M11);
+    result += Vector256.Create(vector.Y) * Vector256.LoadUnsafe(ref matrix.M21);
+    result += Vector256.Create(vector.Z) * Vector256.LoadUnsafe(ref matrix.M31);
+    result += Vector256.Create(vector.W) * Vector256.LoadUnsafe(ref matrix.M41);
+    return result.AsVector4();
+#else
+    return new(
       vector.X * matrix.M11 + vector.Y * matrix.M21 + vector.Z * matrix.M31 + vector.W * matrix.M41,
       vector.X * matrix.M12 + vector.Y * matrix.M22 + vector.Z * matrix.M32 + vector.W * matrix.M42,
       vector.X * matrix.M13 + vector.Y * matrix.M23 + vector.Z * matrix.M33 + vector.W * matrix.M43,
       vector.X * matrix.M14 + vector.Y * matrix.M24 + vector.Z * matrix.M34 + vector.W * matrix.M44
     );
+#endif
+  }
 
   /// <summary>
   /// Transforms a vector by the given Quaternion rotation value.

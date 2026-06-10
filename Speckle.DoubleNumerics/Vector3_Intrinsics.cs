@@ -3,6 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Runtime.CompilerServices;
+#if NET8_0_OR_GREATER
+using System.Runtime.Intrinsics;
+#endif
 
 namespace Speckle.DoubleNumerics;
 
@@ -102,7 +105,14 @@ public partial struct Vector3
   /// </summary>
   /// <param name="other">The Vector3 to compare this instance to.</param>
   /// <returns>True if the other Vector3 is equal to this instance; False otherwise.</returns>
-  public bool Equals(Vector3 other) => X == other.X && Y == other.Y && Z == other.Z;
+  public bool Equals(Vector3 other)
+  {
+#if NET8_0_OR_GREATER
+    return Vector256.EqualsAll(this.AsVector256(), other.AsVector256());
+#else
+    return X == other.X && Y == other.Y && Z == other.Z;
+#endif
+  }
 
   #endregion Public Instance Methods
 
@@ -113,6 +123,9 @@ public partial struct Vector3
   /// <param name="vector1">The first vector.</param>
   /// <param name="vector2">The second vector.</param>
   /// <returns>The dot product.</returns>
+  // Deliberately scalar: packing a 24-byte Vector3 into a Vector256 costs more than the
+  // three multiplies it saves. (dotnet/runtime can use SIMD here because its conversions
+  // are JIT intrinsics and therefore free; out-of-tree they are not.)
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static double Dot(Vector3 vector1, Vector3 vector2) =>
     vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
@@ -123,12 +136,21 @@ public partial struct Vector3
   /// <param name="value1">The first source vector.</param>
   /// <param name="value2">The second source vector.</param>
   /// <returns>The minimized vector.</returns>
-  public static Vector3 Min(Vector3 value1, Vector3 value2) =>
-    new(
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static Vector3 Min(Vector3 value1, Vector3 value2)
+  {
+#if NET8_0_OR_GREATER
+    Vector256<double> v1 = value1.AsVector256();
+    Vector256<double> v2 = value2.AsVector256();
+    return Vector256.ConditionalSelect(Vector256.LessThan(v1, v2), v1, v2).AsVector3();
+#else
+    return new(
       (value1.X < value2.X) ? value1.X : value2.X,
       (value1.Y < value2.Y) ? value1.Y : value2.Y,
       (value1.Z < value2.Z) ? value1.Z : value2.Z
     );
+#endif
+  }
 
   /// <summary>
   /// Returns a vector whose elements are the maximum of each of the pairs of elements in the two source vectors.
@@ -137,12 +159,20 @@ public partial struct Vector3
   /// <param name="value2">The second source vector.</param>
   /// <returns>The maximized vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector3 Max(Vector3 value1, Vector3 value2) =>
-    new(
+  public static Vector3 Max(Vector3 value1, Vector3 value2)
+  {
+#if NET8_0_OR_GREATER
+    Vector256<double> v1 = value1.AsVector256();
+    Vector256<double> v2 = value2.AsVector256();
+    return Vector256.ConditionalSelect(Vector256.GreaterThan(v1, v2), v1, v2).AsVector3();
+#else
+    return new(
       (value1.X > value2.X) ? value1.X : value2.X,
       (value1.Y > value2.Y) ? value1.Y : value2.Y,
       (value1.Z > value2.Z) ? value1.Z : value2.Z
     );
+#endif
+  }
 
   /// <summary>
   /// Returns a vector whose elements are the absolute values of each of the source vector's elements.
@@ -150,7 +180,14 @@ public partial struct Vector3
   /// <param name="value">The source vector.</param>
   /// <returns>The absolute value vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector3 Abs(Vector3 value) => new(Math.Abs(value.X), Math.Abs(value.Y), Math.Abs(value.Z));
+  public static Vector3 Abs(Vector3 value)
+  {
+#if NET8_0_OR_GREATER
+    return Vector256.Abs(value.AsVector256()).AsVector3();
+#else
+    return new(Math.Abs(value.X), Math.Abs(value.Y), Math.Abs(value.Z));
+#endif
+  }
 
   /// <summary>
   /// Returns a vector whose elements are the square root of each of the source vector's elements.
@@ -158,7 +195,14 @@ public partial struct Vector3
   /// <param name="value">The source vector.</param>
   /// <returns>The square root vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector3 SquareRoot(Vector3 value) => new(Math.Sqrt(value.X), Math.Sqrt(value.Y), Math.Sqrt(value.Z));
+  public static Vector3 SquareRoot(Vector3 value)
+  {
+#if NET8_0_OR_GREATER
+    return Vector256.Sqrt(value.AsVector256()).AsVector3();
+#else
+    return new(Math.Sqrt(value.X), Math.Sqrt(value.Y), Math.Sqrt(value.Z));
+#endif
+  }
 
   #endregion Public Static Methods
 
@@ -169,6 +213,11 @@ public partial struct Vector3
   /// <param name="left">The first source vector.</param>
   /// <param name="right">The second source vector.</param>
   /// <returns>The summed vector.</returns>
+  // The lane-wise operators are deliberately scalar: packing 24-byte Vector3s into
+  // Vector256 registers costs more than the three scalar operations it replaces, and
+  // chained operators repack at every boundary. SIMD is reserved for the self-contained
+  // methods with more arithmetic per conversion (Min, Max, Clamp, SquareRoot, Normalize,
+  // Transform).
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Vector3 operator +(Vector3 left, Vector3 right) =>
     new(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
@@ -209,7 +258,7 @@ public partial struct Vector3
   /// <param name="right">The source vector.</param>
   /// <returns>The scaled vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector3 operator *(Double left, Vector3 right) => new Vector3(left) * right;
+  public static Vector3 operator *(Double left, Vector3 right) => right * left;
 
   /// <summary>
   /// Divides the first vector by the second.
@@ -250,8 +299,14 @@ public partial struct Vector3
   /// <param name="right">The second vector to compare.</param>
   /// <returns>True if the vectors are equal; False otherwise.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static bool operator ==(Vector3 left, Vector3 right) =>
-    (left.X == right.X && left.Y == right.Y && left.Z == right.Z);
+  public static bool operator ==(Vector3 left, Vector3 right)
+  {
+#if NET8_0_OR_GREATER
+    return Vector256.EqualsAll(left.AsVector256(), right.AsVector256());
+#else
+    return left.X == right.X && left.Y == right.Y && left.Z == right.Z;
+#endif
+  }
 
   /// <summary>
   /// Returns a boolean indicating whether the two given vectors are not equal.
@@ -260,8 +315,7 @@ public partial struct Vector3
   /// <param name="right">The second vector to compare.</param>
   /// <returns>True if the vectors are not equal; False if they are equal.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static bool operator !=(Vector3 left, Vector3 right) =>
-    (left.X != right.X || left.Y != right.Y || left.Z != right.Z);
+  public static bool operator !=(Vector3 left, Vector3 right) => !(left == right);
 
   #endregion Public Static Operators
 }

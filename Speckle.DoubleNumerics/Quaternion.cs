@@ -3,6 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Globalization;
+using System.Runtime.CompilerServices;
+#if NET8_0_OR_GREATER
+using System.Runtime.Intrinsics;
+#endif
 
 namespace Speckle.DoubleNumerics;
 
@@ -74,31 +78,29 @@ public partial struct Quaternion : IEquatable<Quaternion>
   /// Calculates the length of the Quaternion.
   /// </summary>
   /// <returns>The computed length of the Quaternion.</returns>
-  public double Length()
-  {
-    double ls = X * X + Y * Y + Z * Z + W * W;
-
-    return Math.Sqrt(ls);
-  }
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public double Length() => Math.Sqrt(LengthSquared());
 
   /// <summary>
   /// Calculates the length squared of the Quaternion. This operation is cheaper than Length().
   /// </summary>
   /// <returns>The length squared of the Quaternion.</returns>
-  public double LengthSquared() => X * X + Y * Y + Z * Z + W * W;
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public double LengthSquared() => Dot(this, this);
 
   /// <summary>
   /// Divides each component of the Quaternion by the length of the Quaternion.
   /// </summary>
   /// <param name="value">The source Quaternion.</param>
   /// <returns>The normalized Quaternion.</returns>
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Quaternion Normalize(Quaternion value)
   {
+    double invNorm = 1.0 / value.Length();
+#if NET8_0_OR_GREATER
+    return (value.AsVector256() * invNorm).AsQuaternion();
+#else
     Quaternion ans;
-
-    double ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W;
-
-    double invNorm = 1.0 / Math.Sqrt(ls);
 
     ans.X = value.X * invNorm;
     ans.Y = value.Y * invNorm;
@@ -106,6 +108,7 @@ public partial struct Quaternion : IEquatable<Quaternion>
     ans.W = value.W * invNorm;
 
     return ans;
+#endif
   }
 
   /// <summary>
@@ -113,8 +116,12 @@ public partial struct Quaternion : IEquatable<Quaternion>
   /// </summary>
   /// <param name="value">The Quaternion of which to return the conjugate.</param>
   /// <returns>A new Quaternion that is the conjugate of the specified one.</returns>
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Quaternion Conjugate(Quaternion value)
   {
+#if NET8_0_OR_GREATER
+    return (value.AsVector256() * Vector256.Create(-1.0, -1.0, -1.0, 1.0)).AsQuaternion();
+#else
     Quaternion ans;
 
     ans.X = -value.X;
@@ -123,6 +130,7 @@ public partial struct Quaternion : IEquatable<Quaternion>
     ans.W = value.W;
 
     return ans;
+#endif
   }
 
   /// <summary>
@@ -136,10 +144,11 @@ public partial struct Quaternion : IEquatable<Quaternion>
     // q   = ( -------------   ------------- )
     //       (  a^2 + |v|^2  ,  a^2 + |v|^2  )
 
+    double invNorm = 1.0 / value.LengthSquared();
+#if NET8_0_OR_GREATER
+    return (Conjugate(value).AsVector256() * invNorm).AsQuaternion();
+#else
     Quaternion ans;
-
-    double ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W;
-    double invNorm = 1.0 / ls;
 
     ans.X = -value.X * invNorm;
     ans.Y = -value.Y * invNorm;
@@ -147,6 +156,7 @@ public partial struct Quaternion : IEquatable<Quaternion>
     ans.W = value.W * invNorm;
 
     return ans;
+#endif
   }
 
   /// <summary>
@@ -272,11 +282,18 @@ public partial struct Quaternion : IEquatable<Quaternion>
   /// <param name="quaternion1">The first source Quaternion.</param>
   /// <param name="quaternion2">The second source Quaternion.</param>
   /// <returns>The dot product of the Quaternions.</returns>
-  public static double Dot(Quaternion quaternion1, Quaternion quaternion2) =>
-    quaternion1.X * quaternion2.X
-    + quaternion1.Y * quaternion2.Y
-    + quaternion1.Z * quaternion2.Z
-    + quaternion1.W * quaternion2.W;
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static double Dot(Quaternion quaternion1, Quaternion quaternion2)
+  {
+#if NET8_0_OR_GREATER
+    return Vector256.Dot(quaternion1.AsVector256(), quaternion2.AsVector256());
+#else
+    return quaternion1.X * quaternion2.X
+      + quaternion1.Y * quaternion2.Y
+      + quaternion1.Z * quaternion2.Z
+      + quaternion1.W * quaternion2.W;
+#endif
+  }
 
   /// <summary>
   /// Interpolates between two quaternions, using spherical linear interpolation.
@@ -323,6 +340,9 @@ public partial struct Quaternion : IEquatable<Quaternion>
       s2 = (flip) ? -Math.Sin(t * omega) * invSinOmega : Math.Sin(t * omega) * invSinOmega;
     }
 
+#if NET8_0_OR_GREATER
+    return (quaternion1.AsVector256() * s1 + quaternion2.AsVector256() * s2).AsQuaternion();
+#else
     Quaternion ans;
 
     ans.X = s1 * quaternion1.X + s2 * quaternion2.X;
@@ -331,6 +351,7 @@ public partial struct Quaternion : IEquatable<Quaternion>
     ans.W = s1 * quaternion1.W + s2 * quaternion2.W;
 
     return ans;
+#endif
   }
 
   /// <summary>
@@ -345,13 +366,15 @@ public partial struct Quaternion : IEquatable<Quaternion>
     double t = amount;
     double t1 = 1.0 - t;
 
-    Quaternion r = new();
+    double dot = Dot(quaternion1, quaternion2);
 
-    double dot =
-      quaternion1.X * quaternion2.X
-      + quaternion1.Y * quaternion2.Y
-      + quaternion1.Z * quaternion2.Z
-      + quaternion1.W * quaternion2.W;
+#if NET8_0_OR_GREATER
+    Vector256<double> q1 = quaternion1.AsVector256();
+    Vector256<double> q2 = quaternion2.AsVector256();
+    Vector256<double> result = dot >= 0.0 ? q1 * t1 + q2 * t : q1 * t1 - q2 * t;
+    return Normalize(result.AsQuaternion());
+#else
+    Quaternion r = new();
 
     if (dot >= 0.0)
     {
@@ -378,6 +401,7 @@ public partial struct Quaternion : IEquatable<Quaternion>
     r.W *= invNorm;
 
     return r;
+#endif
   }
 
   /// <summary>
@@ -386,53 +410,18 @@ public partial struct Quaternion : IEquatable<Quaternion>
   /// <param name="value1">The first Quaternion rotation in the series.</param>
   /// <param name="value2">The second Quaternion rotation in the series.</param>
   /// <returns>A new Quaternion representing the concatenation of the value1 rotation followed by the value2 rotation.</returns>
-  public static Quaternion Concatenate(Quaternion value1, Quaternion value2)
-  {
-    Quaternion ans;
-
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static Quaternion Concatenate(Quaternion value1, Quaternion value2) =>
     // Concatenate rotation is actually q2 * q1 instead of q1 * q2.
-    // So that's why value2 goes q1 and value1 goes q2.
-    double q1x = value2.X;
-    double q1y = value2.Y;
-    double q1z = value2.Z;
-    double q1w = value2.W;
-
-    double q2x = value1.X;
-    double q2y = value1.Y;
-    double q2z = value1.Z;
-    double q2w = value1.W;
-
-    // cross(av, bv)
-    double cx = q1y * q2z - q1z * q2y;
-    double cy = q1z * q2x - q1x * q2z;
-    double cz = q1x * q2y - q1y * q2x;
-
-    double dot = q1x * q2x + q1y * q2y + q1z * q2z;
-
-    ans.X = q1x * q2w + q2x * q1w + cx;
-    ans.Y = q1y * q2w + q2y * q1w + cy;
-    ans.Z = q1z * q2w + q2z * q1w + cz;
-    ans.W = q1w * q2w - dot;
-
-    return ans;
-  }
+    value2 * value1;
 
   /// <summary>
   /// Flips the sign of each component of the quaternion.
   /// </summary>
   /// <param name="value">The source Quaternion.</param>
   /// <returns>The negated Quaternion.</returns>
-  public static Quaternion Negate(Quaternion value)
-  {
-    Quaternion ans;
-
-    ans.X = -value.X;
-    ans.Y = -value.Y;
-    ans.Z = -value.Z;
-    ans.W = -value.W;
-
-    return ans;
-  }
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static Quaternion Negate(Quaternion value) => -value;
 
   /// <summary>
   /// Adds two Quaternions element-by-element.
@@ -440,17 +429,8 @@ public partial struct Quaternion : IEquatable<Quaternion>
   /// <param name="value1">The first source Quaternion.</param>
   /// <param name="value2">The second source Quaternion.</param>
   /// <returns>The result of adding the Quaternions.</returns>
-  public static Quaternion Add(Quaternion value1, Quaternion value2)
-  {
-    Quaternion ans;
-
-    ans.X = value1.X + value2.X;
-    ans.Y = value1.Y + value2.Y;
-    ans.Z = value1.Z + value2.Z;
-    ans.W = value1.W + value2.W;
-
-    return ans;
-  }
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static Quaternion Add(Quaternion value1, Quaternion value2) => value1 + value2;
 
   /// <summary>
   /// Subtracts one Quaternion from another.
@@ -458,17 +438,8 @@ public partial struct Quaternion : IEquatable<Quaternion>
   /// <param name="value1">The first source Quaternion.</param>
   /// <param name="value2">The second Quaternion, to be subtracted from the first.</param>
   /// <returns>The result of the subtraction.</returns>
-  public static Quaternion Subtract(Quaternion value1, Quaternion value2)
-  {
-    Quaternion ans;
-
-    ans.X = value1.X - value2.X;
-    ans.Y = value1.Y - value2.Y;
-    ans.Z = value1.Z - value2.Z;
-    ans.W = value1.W - value2.W;
-
-    return ans;
-  }
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static Quaternion Subtract(Quaternion value1, Quaternion value2) => value1 - value2;
 
   /// <summary>
   /// Multiplies two Quaternions together.
@@ -476,34 +447,8 @@ public partial struct Quaternion : IEquatable<Quaternion>
   /// <param name="value1">The Quaternion on the left side of the multiplication.</param>
   /// <param name="value2">The Quaternion on the right side of the multiplication.</param>
   /// <returns>The result of the multiplication.</returns>
-  public static Quaternion Multiply(Quaternion value1, Quaternion value2)
-  {
-    Quaternion ans;
-
-    double q1x = value1.X;
-    double q1y = value1.Y;
-    double q1z = value1.Z;
-    double q1w = value1.W;
-
-    double q2x = value2.X;
-    double q2y = value2.Y;
-    double q2z = value2.Z;
-    double q2w = value2.W;
-
-    // cross(av, bv)
-    double cx = q1y * q2z - q1z * q2y;
-    double cy = q1z * q2x - q1x * q2z;
-    double cz = q1x * q2y - q1y * q2x;
-
-    double dot = q1x * q2x + q1y * q2y + q1z * q2z;
-
-    ans.X = q1x * q2w + q2x * q1w + cx;
-    ans.Y = q1y * q2w + q2y * q1w + cy;
-    ans.Z = q1z * q2w + q2z * q1w + cz;
-    ans.W = q1w * q2w - dot;
-
-    return ans;
-  }
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static Quaternion Multiply(Quaternion value1, Quaternion value2) => value1 * value2;
 
   /// <summary>
   /// Multiplies a Quaternion by a scalar value.
@@ -511,17 +456,8 @@ public partial struct Quaternion : IEquatable<Quaternion>
   /// <param name="value1">The source Quaternion.</param>
   /// <param name="value2">The scalar value.</param>
   /// <returns>The result of the multiplication.</returns>
-  public static Quaternion Multiply(Quaternion value1, double value2)
-  {
-    Quaternion ans;
-
-    ans.X = value1.X * value2;
-    ans.Y = value1.Y * value2;
-    ans.Z = value1.Z * value2;
-    ans.W = value1.W * value2;
-
-    return ans;
-  }
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static Quaternion Multiply(Quaternion value1, double value2) => value1 * value2;
 
   /// <summary>
   /// Divides a Quaternion by another Quaternion.
@@ -529,50 +465,20 @@ public partial struct Quaternion : IEquatable<Quaternion>
   /// <param name="value1">The source Quaternion.</param>
   /// <param name="value2">The divisor.</param>
   /// <returns>The result of the division.</returns>
-  public static Quaternion Divide(Quaternion value1, Quaternion value2)
-  {
-    Quaternion ans;
-
-    double q1x = value1.X;
-    double q1y = value1.Y;
-    double q1z = value1.Z;
-    double q1w = value1.W;
-
-    //-------------------------------------
-    // Inverse part.
-    double ls = value2.X * value2.X + value2.Y * value2.Y + value2.Z * value2.Z + value2.W * value2.W;
-    double invNorm = 1.0 / ls;
-
-    double q2x = -value2.X * invNorm;
-    double q2y = -value2.Y * invNorm;
-    double q2z = -value2.Z * invNorm;
-    double q2w = value2.W * invNorm;
-
-    //-------------------------------------
-    // Multiply part.
-
-    // cross(av, bv)
-    double cx = q1y * q2z - q1z * q2y;
-    double cy = q1z * q2x - q1x * q2z;
-    double cz = q1x * q2y - q1y * q2x;
-
-    double dot = q1x * q2x + q1y * q2y + q1z * q2z;
-
-    ans.X = q1x * q2w + q2x * q1w + cx;
-    ans.Y = q1y * q2w + q2y * q1w + cy;
-    ans.Z = q1z * q2w + q2z * q1w + cz;
-    ans.W = q1w * q2w - dot;
-
-    return ans;
-  }
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static Quaternion Divide(Quaternion value1, Quaternion value2) => value1 / value2;
 
   /// <summary>
   /// Flips the sign of each component of the quaternion.
   /// </summary>
   /// <param name="value">The source Quaternion.</param>
   /// <returns>The negated Quaternion.</returns>
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Quaternion operator -(Quaternion value)
   {
+#if NET8_0_OR_GREATER
+    return (-value.AsVector256()).AsQuaternion();
+#else
     Quaternion ans;
 
     ans.X = -value.X;
@@ -581,6 +487,7 @@ public partial struct Quaternion : IEquatable<Quaternion>
     ans.W = -value.W;
 
     return ans;
+#endif
   }
 
   /// <summary>
@@ -589,8 +496,12 @@ public partial struct Quaternion : IEquatable<Quaternion>
   /// <param name="value1">The first source Quaternion.</param>
   /// <param name="value2">The second source Quaternion.</param>
   /// <returns>The result of adding the Quaternions.</returns>
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Quaternion operator +(Quaternion value1, Quaternion value2)
   {
+#if NET8_0_OR_GREATER
+    return (value1.AsVector256() + value2.AsVector256()).AsQuaternion();
+#else
     Quaternion ans;
 
     ans.X = value1.X + value2.X;
@@ -599,6 +510,7 @@ public partial struct Quaternion : IEquatable<Quaternion>
     ans.W = value1.W + value2.W;
 
     return ans;
+#endif
   }
 
   /// <summary>
@@ -607,8 +519,12 @@ public partial struct Quaternion : IEquatable<Quaternion>
   /// <param name="value1">The first source Quaternion.</param>
   /// <param name="value2">The second Quaternion, to be subtracted from the first.</param>
   /// <returns>The result of the subtraction.</returns>
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Quaternion operator -(Quaternion value1, Quaternion value2)
   {
+#if NET8_0_OR_GREATER
+    return (value1.AsVector256() - value2.AsVector256()).AsQuaternion();
+#else
     Quaternion ans;
 
     ans.X = value1.X - value2.X;
@@ -617,6 +533,7 @@ public partial struct Quaternion : IEquatable<Quaternion>
     ans.W = value1.W - value2.W;
 
     return ans;
+#endif
   }
 
   /// <summary>
@@ -625,8 +542,29 @@ public partial struct Quaternion : IEquatable<Quaternion>
   /// <param name="value1">The Quaternion on the left side of the multiplication.</param>
   /// <param name="value2">The Quaternion on the right side of the multiplication.</param>
   /// <returns>The result of the multiplication.</returns>
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Quaternion operator *(Quaternion value1, Quaternion value2)
   {
+#if NET8_0_OR_GREATER
+    // This implementation is based on the DirectX Math Library XMQuaternionMultiply method
+    Vector256<double> left = value1.AsVector256();
+    Vector256<double> right = value2.AsVector256();
+
+    Vector256<double> result = right * left.GetElement(3);
+    result +=
+      Vector256.Shuffle(right, Vector256.Create(3L, 2L, 1L, 0L))
+      * left.GetElement(0)
+      * Vector256.Create(1.0, -1.0, 1.0, -1.0);
+    result +=
+      Vector256.Shuffle(right, Vector256.Create(2L, 3L, 0L, 1L))
+      * left.GetElement(1)
+      * Vector256.Create(1.0, 1.0, -1.0, -1.0);
+    result +=
+      Vector256.Shuffle(right, Vector256.Create(1L, 0L, 3L, 2L))
+      * left.GetElement(2)
+      * Vector256.Create(-1.0, 1.0, 1.0, -1.0);
+    return result.AsQuaternion();
+#else
     Quaternion ans;
 
     double q1x = value1.X;
@@ -652,6 +590,7 @@ public partial struct Quaternion : IEquatable<Quaternion>
     ans.W = q1w * q2w - dot;
 
     return ans;
+#endif
   }
 
   /// <summary>
@@ -660,8 +599,12 @@ public partial struct Quaternion : IEquatable<Quaternion>
   /// <param name="value1">The source Quaternion.</param>
   /// <param name="value2">The scalar value.</param>
   /// <returns>The result of the multiplication.</returns>
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Quaternion operator *(Quaternion value1, double value2)
   {
+#if NET8_0_OR_GREATER
+    return (value1.AsVector256() * value2).AsQuaternion();
+#else
     Quaternion ans;
 
     ans.X = value1.X * value2;
@@ -670,6 +613,7 @@ public partial struct Quaternion : IEquatable<Quaternion>
     ans.W = value1.W * value2;
 
     return ans;
+#endif
   }
 
   /// <summary>
@@ -678,42 +622,8 @@ public partial struct Quaternion : IEquatable<Quaternion>
   /// <param name="value1">The source Quaternion.</param>
   /// <param name="value2">The divisor.</param>
   /// <returns>The result of the division.</returns>
-  public static Quaternion operator /(Quaternion value1, Quaternion value2)
-  {
-    Quaternion ans;
-
-    double q1x = value1.X;
-    double q1y = value1.Y;
-    double q1z = value1.Z;
-    double q1w = value1.W;
-
-    //-------------------------------------
-    // Inverse part.
-    double ls = value2.X * value2.X + value2.Y * value2.Y + value2.Z * value2.Z + value2.W * value2.W;
-    double invNorm = 1.0 / ls;
-
-    double q2x = -value2.X * invNorm;
-    double q2y = -value2.Y * invNorm;
-    double q2z = -value2.Z * invNorm;
-    double q2w = value2.W * invNorm;
-
-    //-------------------------------------
-    // Multiply part.
-
-    // cross(av, bv)
-    double cx = q1y * q2z - q1z * q2y;
-    double cy = q1z * q2x - q1x * q2z;
-    double cz = q1x * q2y - q1y * q2x;
-
-    double dot = q1x * q2x + q1y * q2y + q1z * q2z;
-
-    ans.X = q1x * q2w + q2x * q1w + cx;
-    ans.Y = q1y * q2w + q2y * q1w + cy;
-    ans.Z = q1z * q2w + q2z * q1w + cz;
-    ans.W = q1w * q2w - dot;
-
-    return ans;
-  }
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static Quaternion operator /(Quaternion value1, Quaternion value2) => value1 * Inverse(value2);
 
   /// <summary>
   /// Returns a boolean indicating whether the two given Quaternions are equal.
@@ -721,8 +631,15 @@ public partial struct Quaternion : IEquatable<Quaternion>
   /// <param name="value1">The first Quaternion to compare.</param>
   /// <param name="value2">The second Quaternion to compare.</param>
   /// <returns>True if the Quaternions are equal; False otherwise.</returns>
-  public static bool operator ==(Quaternion value1, Quaternion value2) =>
-    (value1.X == value2.X && value1.Y == value2.Y && value1.Z == value2.Z && value1.W == value2.W);
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static bool operator ==(Quaternion value1, Quaternion value2)
+  {
+#if NET8_0_OR_GREATER
+    return Vector256.EqualsAll(value1.AsVector256(), value2.AsVector256());
+#else
+    return value1.X == value2.X && value1.Y == value2.Y && value1.Z == value2.Z && value1.W == value2.W;
+#endif
+  }
 
   /// <summary>
   /// Returns a boolean indicating whether the two given Quaternions are not equal.
@@ -730,15 +647,16 @@ public partial struct Quaternion : IEquatable<Quaternion>
   /// <param name="value1">The first Quaternion to compare.</param>
   /// <param name="value2">The second Quaternion to compare.</param>
   /// <returns>True if the Quaternions are not equal; False if they are equal.</returns>
-  public static bool operator !=(Quaternion value1, Quaternion value2) =>
-    (value1.X != value2.X || value1.Y != value2.Y || value1.Z != value2.Z || value1.W != value2.W);
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static bool operator !=(Quaternion value1, Quaternion value2) => !(value1 == value2);
 
   /// <summary>
   /// Returns a boolean indicating whether the given Quaternion is equal to this Quaternion instance.
   /// </summary>
   /// <param name="other">The Quaternion to compare this instance to.</param>
   /// <returns>True if the other Quaternion is equal to this instance; False otherwise.</returns>
-  public bool Equals(Quaternion other) => (X == other.X && Y == other.Y && Z == other.Z && W == other.W);
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public bool Equals(Quaternion other) => this == other;
 
   /// <summary>
   /// Returns a boolean indicating whether the given Object is equal to this Quaternion instance.

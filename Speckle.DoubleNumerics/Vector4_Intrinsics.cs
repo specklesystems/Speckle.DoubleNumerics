@@ -3,6 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Runtime.CompilerServices;
+#if NET8_0_OR_GREATER
+using System.Runtime.Intrinsics;
+#endif
 
 namespace Speckle.DoubleNumerics;
 
@@ -129,7 +132,14 @@ public partial struct Vector4
   /// </summary>
   /// <param name="other">The Vector4 to compare this instance to.</param>
   /// <returns>True if the other Vector4 is equal to this instance; False otherwise.</returns>
-  public bool Equals(Vector4 other) => X == other.X && Y == other.Y && Z == other.Z && W == other.W;
+  public bool Equals(Vector4 other)
+  {
+#if NET8_0_OR_GREATER
+    return Vector256.EqualsAll(this.AsVector256(), other.AsVector256());
+#else
+    return X == other.X && Y == other.Y && Z == other.Z && W == other.W;
+#endif
+  }
 
   #endregion Public Instance Methods
 
@@ -141,8 +151,14 @@ public partial struct Vector4
   /// <param name="vector2">The second vector.</param>
   /// <returns>The dot product.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static double Dot(Vector4 vector1, Vector4 vector2) =>
-    vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z + vector1.W * vector2.W;
+  public static double Dot(Vector4 vector1, Vector4 vector2)
+  {
+#if NET8_0_OR_GREATER
+    return Vector256.Dot(vector1.AsVector256(), vector2.AsVector256());
+#else
+    return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z + vector1.W * vector2.W;
+#endif
+  }
 
   /// <summary>
   /// Returns a vector whose elements are the minimum of each of the pairs of elements in the two source vectors.
@@ -151,13 +167,21 @@ public partial struct Vector4
   /// <param name="value2">The second source vector.</param>
   /// <returns>The minimized vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector4 Min(Vector4 value1, Vector4 value2) =>
-    new(
+  public static Vector4 Min(Vector4 value1, Vector4 value2)
+  {
+#if NET8_0_OR_GREATER
+    Vector256<double> v1 = value1.AsVector256();
+    Vector256<double> v2 = value2.AsVector256();
+    return Vector256.ConditionalSelect(Vector256.LessThan(v1, v2), v1, v2).AsVector4();
+#else
+    return new(
       (value1.X < value2.X) ? value1.X : value2.X,
       (value1.Y < value2.Y) ? value1.Y : value2.Y,
       (value1.Z < value2.Z) ? value1.Z : value2.Z,
       (value1.W < value2.W) ? value1.W : value2.W
     );
+#endif
+  }
 
   /// <summary>
   /// Returns a vector whose elements are the maximum of each of the pairs of elements in the two source vectors.
@@ -166,13 +190,21 @@ public partial struct Vector4
   /// <param name="value2">The second source vector.</param>
   /// <returns>The maximized vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector4 Max(Vector4 value1, Vector4 value2) =>
-    new(
+  public static Vector4 Max(Vector4 value1, Vector4 value2)
+  {
+#if NET8_0_OR_GREATER
+    Vector256<double> v1 = value1.AsVector256();
+    Vector256<double> v2 = value2.AsVector256();
+    return Vector256.ConditionalSelect(Vector256.GreaterThan(v1, v2), v1, v2).AsVector4();
+#else
+    return new(
       (value1.X > value2.X) ? value1.X : value2.X,
       (value1.Y > value2.Y) ? value1.Y : value2.Y,
       (value1.Z > value2.Z) ? value1.Z : value2.Z,
       (value1.W > value2.W) ? value1.W : value2.W
     );
+#endif
+  }
 
   /// <summary>
   /// Returns a vector whose elements are the absolute values of each of the source vector's elements.
@@ -180,8 +212,14 @@ public partial struct Vector4
   /// <param name="value">The source vector.</param>
   /// <returns>The absolute value vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector4 Abs(Vector4 value) =>
-    new(Math.Abs(value.X), Math.Abs(value.Y), Math.Abs(value.Z), Math.Abs(value.W));
+  public static Vector4 Abs(Vector4 value)
+  {
+#if NET8_0_OR_GREATER
+    return Vector256.Abs(value.AsVector256()).AsVector4();
+#else
+    return new(Math.Abs(value.X), Math.Abs(value.Y), Math.Abs(value.Z), Math.Abs(value.W));
+#endif
+  }
 
   /// <summary>
   /// Returns a vector whose elements are the square root of each of the source vector's elements.
@@ -189,8 +227,14 @@ public partial struct Vector4
   /// <param name="value">The source vector.</param>
   /// <returns>The square root vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector4 SquareRoot(Vector4 value) =>
-    new(Math.Sqrt(value.X), Math.Sqrt(value.Y), Math.Sqrt(value.Z), Math.Sqrt(value.W));
+  public static Vector4 SquareRoot(Vector4 value)
+  {
+#if NET8_0_OR_GREATER
+    return Vector256.Sqrt(value.AsVector256()).AsVector4();
+#else
+    return new(Math.Sqrt(value.X), Math.Sqrt(value.Y), Math.Sqrt(value.Z), Math.Sqrt(value.W));
+#endif
+  }
 
   #endregion Public Static Methods
 
@@ -202,8 +246,14 @@ public partial struct Vector4
   /// <param name="right">The second source vector.</param>
   /// <returns>The summed vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector4 operator +(Vector4 left, Vector4 right) =>
-    new(left.X + right.X, left.Y + right.Y, left.Z + right.Z, left.W + right.W);
+  public static Vector4 operator +(Vector4 left, Vector4 right)
+  {
+#if NET8_0_OR_GREATER
+    return (left.AsVector256() + right.AsVector256()).AsVector4();
+#else
+    return new(left.X + right.X, left.Y + right.Y, left.Z + right.Z, left.W + right.W);
+#endif
+  }
 
   /// <summary>
   /// Subtracts the second vector from the first.
@@ -212,8 +262,14 @@ public partial struct Vector4
   /// <param name="right">The second source vector.</param>
   /// <returns>The difference vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector4 operator -(Vector4 left, Vector4 right) =>
-    new(left.X - right.X, left.Y - right.Y, left.Z - right.Z, left.W - right.W);
+  public static Vector4 operator -(Vector4 left, Vector4 right)
+  {
+#if NET8_0_OR_GREATER
+    return (left.AsVector256() - right.AsVector256()).AsVector4();
+#else
+    return new(left.X - right.X, left.Y - right.Y, left.Z - right.Z, left.W - right.W);
+#endif
+  }
 
   /// <summary>
   /// Multiplies two vectors together.
@@ -222,8 +278,14 @@ public partial struct Vector4
   /// <param name="right">The second source vector.</param>
   /// <returns>The product vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector4 operator *(Vector4 left, Vector4 right) =>
-    new(left.X * right.X, left.Y * right.Y, left.Z * right.Z, left.W * right.W);
+  public static Vector4 operator *(Vector4 left, Vector4 right)
+  {
+#if NET8_0_OR_GREATER
+    return (left.AsVector256() * right.AsVector256()).AsVector4();
+#else
+    return new(left.X * right.X, left.Y * right.Y, left.Z * right.Z, left.W * right.W);
+#endif
+  }
 
   /// <summary>
   /// Multiplies a vector by the given scalar.
@@ -232,7 +294,14 @@ public partial struct Vector4
   /// <param name="right">The scalar value.</param>
   /// <returns>The scaled vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector4 operator *(Vector4 left, Double right) => left * new Vector4(right);
+  public static Vector4 operator *(Vector4 left, Double right)
+  {
+#if NET8_0_OR_GREATER
+    return (left.AsVector256() * right).AsVector4();
+#else
+    return left * new Vector4(right);
+#endif
+  }
 
   /// <summary>
   /// Multiplies a vector by the given scalar.
@@ -241,7 +310,7 @@ public partial struct Vector4
   /// <param name="right">The source vector.</param>
   /// <returns>The scaled vector.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector4 operator *(Double left, Vector4 right) => new Vector4(left) * right;
+  public static Vector4 operator *(Double left, Vector4 right) => right * left;
 
   /// <summary>
   /// Divides the first vector by the second.
@@ -250,8 +319,14 @@ public partial struct Vector4
   /// <param name="right">The second source vector.</param>
   /// <returns>The vector resulting from the division.</returns>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Vector4 operator /(Vector4 left, Vector4 right) =>
-    new(left.X / right.X, left.Y / right.Y, left.Z / right.Z, left.W / right.W);
+  public static Vector4 operator /(Vector4 left, Vector4 right)
+  {
+#if NET8_0_OR_GREATER
+    return (left.AsVector256() / right.AsVector256()).AsVector4();
+#else
+    return new(left.X / right.X, left.Y / right.Y, left.Z / right.Z, left.W / right.W);
+#endif
+  }
 
   /// <summary>
   /// Divides the vector by the given scalar.
@@ -263,8 +338,11 @@ public partial struct Vector4
   public static Vector4 operator /(Vector4 value1, double value2)
   {
     double invDiv = 1.0 / value2;
-
+#if NET8_0_OR_GREATER
+    return (value1.AsVector256() * invDiv).AsVector4();
+#else
     return new Vector4(value1.X * invDiv, value1.Y * invDiv, value1.Z * invDiv, value1.W * invDiv);
+#endif
   }
 
   /// <summary>
